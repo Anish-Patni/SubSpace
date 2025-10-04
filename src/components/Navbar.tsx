@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Plus, LayoutDashboard, Home, Settings } from 'lucide-react'
+import { AuthButton } from './AuthButton'
 
 export const Navbar = () => {
   const location = useLocation()
@@ -13,17 +14,7 @@ export const Navbar = () => {
         </Link>
 
         {isLanding ? (
-          <div className="flex gap-3">
-            <button className="px-6 py-2.5 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-              Login
-            </button>
-            <button 
-              className="px-6 py-2.5 font-semibold rounded-lg text-white shadow-lg hover:shadow-xl transition-all"
-              style={{ backgroundColor: 'var(--nb-accent)' }}
-            >
-              Sign Up
-            </button>
-          </div>
+          <AuthButton />
         ) : (
           <div className="flex items-center gap-2">
             <Link to="/">
@@ -61,6 +52,10 @@ export const Navbar = () => {
                 <Settings size={20} />
               </button>
             </Link>
+
+            <div className="ml-2 pl-2 border-l-2" style={{ borderColor: 'var(--nb-border)' }}>
+              <AuthButton />
+            </div>
           </div>
         )}
       </div>

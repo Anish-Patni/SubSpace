@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/Navbar'
 import { User, Bell, CreditCard, Shield, Trash2 } from 'lucide-react'
+import { useUser } from '@civic/auth/react'
 
 export const Settings = () => {
+  const { user } = useUser()
+  
   const [notifications, setNotifications] = useState({
     emailReminders: true,
     renewalAlerts: true,
@@ -11,10 +14,20 @@ export const Settings = () => {
   })
 
   const [profile, setProfile] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
+    name: '',
+    email: '',
     currency: 'USD'
   })
+
+  useEffect(() => {
+    if (user) {
+      setProfile({
+        name: user.name || '',
+        email: user.email || '',
+        currency: 'USD'
+      })
+    }
+  }, [user])
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
