@@ -5,6 +5,16 @@
 
 @layer base {
   :root {
+    /* Neo-Brutalist Theme */
+    --nb-bg: #F7F5F2;
+    --nb-ink: #1A1A1A;
+    --nb-accent: #FF6F61;
+    --nb-accent-2: #F4C430;
+    --nb-warn: #FF9F1C;
+    --nb-error: #D72638;
+    --nb-ok: #2AAE62;
+    --nb-card: #FFFFFF;
+    
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -64,8 +74,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'geist';
-
+    font-family: 'Inter', 'geist', sans-serif;
   }
 }
 
