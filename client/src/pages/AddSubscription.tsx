@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { BillingCycle } from '@/types/subscription'
 import { Navbar } from '@/components/Navbar'
+import { subscriptionService } from '@/services/subscriptionService'
+import { toast } from 'sonner'
 
 export const AddSubscription = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'manual' | 'ai'>('manual')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
   // Manual form state
   const [formData, setFormData] = useState({
@@ -15,6 +18,7 @@ export const AddSubscription = () => {
     billingCycle: 'monthly' as BillingCycle,
     renewalDate: '',
     paymentMethod: '',
+    category: '',
     notes: ''
   })
 
@@ -23,10 +27,28 @@ export const AddSubscription = () => {
   const [aiProcessing, setAiProcessing] = useState(false)
   const [aiExtracted, setAiExtracted] = useState<any>(null)
 
-  const handleManualSubmit = (e: React.FormEvent) => {
+  const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Manual submission:', formData)
-    navigate('/dashboard')
+    setIsSubmitting(true)
+
+    try {
+      await subscriptionService.create({
+        serviceName: formData.serviceName,
+        price: parseFloat(formData.price),
+        billingCycle: formData.billingCycle,
+        renewalDate: formData.renewalDate,
+        paymentMethod: formData.paymentMethod || undefined,
+        category: formData.category || undefined,
+        notes: formData.notes || undefined
+      })
+      
+      toast.success('Subscription added successfully!')
+      navigate('/dashboard')
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || 'Failed to add subscription')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleAiProcess = async () => {
@@ -130,27 +152,37 @@ export const AddSubscription = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block font-bold mb-2 text-lg">Renewal Date</label>
+                <input
+                  type="date"
+                  required
+                  value={formData.renewalDate}
+                  onChange={(e) => setFormData({...formData, renewalDate: e.target.value})}
+                  className="w-full px-4 py-3 border-3 border-black font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
+                />
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block font-bold mb-2 text-lg">Renewal Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={formData.renewalDate}
-                    onChange={(e) => setFormData({...formData, renewalDate: e.target.value})}
-                    className="w-full px-4 py-3 border-3 border-black font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold mb-2 text-lg">Payment Method</label>
+                  <label className="block font-bold mb-2 text-lg">Payment Method (Optional)</label>
                   <input
                     type="text"
-                    required
                     value={formData.paymentMethod}
                     onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
                     className="w-full px-4 py-3 border-3 border-black font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
                     placeholder="Visa ****1234"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold mb-2 text-lg">Category (Optional)</label>
+                  <input
+                    type="text"
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    className="w-full px-4 py-3 border-3 border-black font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
+                    placeholder="Entertainment, Productivity, etc."
                   />
                 </div>
               </div>
@@ -169,10 +201,11 @@ export const AddSubscription = () => {
 
             <button
               type="submit"
-              className="w-full py-4 border-4 border-black font-black text-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+              disabled={isSubmitting}
+              className="w-full py-4 border-4 border-black font-black text-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: 'var(--nb-ok)' }}
             >
-              Save Subscription
+              {isSubmitting ? 'Saving...' : 'Save Subscription'}
             </button>
           </form>
         )}

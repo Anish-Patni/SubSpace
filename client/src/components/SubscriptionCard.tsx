@@ -4,9 +4,14 @@ import { Calendar, CreditCard } from 'lucide-react'
 
 interface SubscriptionCardProps {
   subscription: Subscription
+  onUpdate?: () => void
 }
 
-export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
+export const SubscriptionCard = ({ subscription, onUpdate }: SubscriptionCardProps) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
   const statusColors = {
     active: 'var(--nb-ok)',
     paused: 'var(--nb-warn)',
@@ -14,7 +19,7 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
   }
 
   return (
-    <Link to={`/subscription/${subscription.id}`}>
+    <Link to={`/subscription/${subscription._id}`}>
       <div 
         className="border-4 border-black p-6 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all cursor-pointer"
         style={{ backgroundColor: 'var(--nb-card)' }}
@@ -40,12 +45,14 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
         <div className="space-y-2 border-t-3 border-black pt-4">
           <div className="flex items-center gap-2">
             <Calendar size={16} />
-            <span className="font-bold text-sm">Renews: {subscription.renewalDate}</span>
+            <span className="font-bold text-sm">Renews: {formatDate(subscription.renewalDate)}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <CreditCard size={16} />
-            <span className="font-bold text-sm">{subscription.paymentMethod}</span>
-          </div>
+          {subscription.paymentMethod && (
+            <div className="flex items-center gap-2">
+              <CreditCard size={16} />
+              <span className="font-bold text-sm">{subscription.paymentMethod}</span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

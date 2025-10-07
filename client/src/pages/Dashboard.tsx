@@ -1,59 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
 import { Subscription, SubscriptionStatus } from '@/types/subscription'
 import { SubscriptionCard } from '@/components/SubscriptionCard'
 import { StatsCard } from '@/components/StatsCard'
-import { SpendingChart, CategoryChart } from '@/components/SpendingChart'
 import { Navbar } from '@/components/Navbar'
-
-// Mock data
-const mockSubscriptions: Subscription[] = [
-  {
-    id: '1',
-    serviceName: 'Netflix',
-    price: 15.99,
-    billingCycle: 'monthly',
-    renewalDate: '2025-10-15',
-    paymentMethod: 'Visa ****1234',
-    status: 'active',
-    createdAt: '2024-01-01',
-    totalSpent: 191.88
-  },
-  {
-    id: '2',
-    serviceName: 'Spotify',
-    price: 9.99,
-    billingCycle: 'monthly',
-    renewalDate: '2025-10-20',
-    paymentMethod: 'Mastercard ****5678',
-    status: 'active',
-    createdAt: '2024-02-01'
-  },
-  {
-    id: '3',
-    serviceName: 'Adobe Creative Cloud',
-    price: 54.99,
-    billingCycle: 'monthly',
-    renewalDate: '2025-10-10',
-    paymentMethod: 'Visa ****1234',
-    status: 'paused',
-    createdAt: '2024-03-01'
-  }
-]
+import { subscriptionService } from '@/services/subscriptionService'
+import { toast } from 'sonner'
 
 export const Dashboard = () => {
   const [filter, setFilter] = useState<SubscriptionStatus | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
+  const [stats, setStats] = useState({ totalMonthly: '0', activeCount: 0, nextRenewal: null as string | null })
+  const [isLoading, setIsLoading] = useState(true)
 
-  const filteredSubs = mockSubscriptions.filter(sub => {
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const loadData = async () => {
+    try {
+      const [subsData, statsData] = await Promise.all([
+        subscriptionService.getAll(),
+        subscriptionService.getStats()
+      ])
+      setSubscriptions(subsData)
+      setStats(statsData)
+    } catch (error: any) {
+      toast.error('Failed to load subscriptions')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const filteredSubs = subscriptions.filter(sub => {
     const matchesFilter = filter === 'all' || sub.status === filter
     const matchesSearch = sub.serviceName.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesFilter && matchesSearch
   })
 
-  const totalMonthly = mockSubscriptions
-    .filter(s => s.status === 'active')
-    .reduce((sum, s) => sum + s.price, 0)
+  const formatNextRenewal = (date: string | null) => {
+    if (!date) return 'N/A'
+    const d = new Date(date)
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)' }}>
+        <Navbar />
+        <div className="flex items-center justify-center h-96">
+          <p className="text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
@@ -64,17 +65,17 @@ export const Dashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatsCard 
             label="Total Monthly Spend" 
-            value={`$${totalMonthly.toFixed(2)}`}
+            value={`$${stats.totalMonthly}`}
             color="var(--nb-accent)"
           />
           <StatsCard 
             label="Next Renewal" 
-            value="Oct 10"
+            value={formatNextRenewal(stats.nextRenewal)}
             color="var(--nb-accent-2)"
           />
           <StatsCard 
             label="Active Subscriptions" 
-            value={mockSubscriptions.filter(s => s.status === 'active').length.toString()}
+            value={stats.activeCount.toString()}
             color="var(--nb-ok)"
           />
         </div>
@@ -115,16 +116,25 @@ export const Dashboard = () => {
         </div>
 
         {/* Subscription Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSubs.map((sub) => (
-            <SubscriptionCard key={sub.id} subscription={sub} />
-          ))}
-        </div>
-
-        {filteredSubs.length === 0 && (
+        {subscriptions.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-2xl font-bold">No subscriptions found</p>
+            <p className="text-3xl font-black mb-4">No subscriptions yet</p>
+            <p className="text-lg mb-6">Start by adding your first subscription</p>
           </div>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredSubs.map((sub) => (
+                <SubscriptionCard key={sub._id} subscription={sub} onUpdate={loadData} />
+              ))}
+            </div>
+
+            {filteredSubs.length === 0 && subscriptions.length > 0 && (
+              <div className="text-center py-20">
+                <p className="text-2xl font-bold">No subscriptions match your filters</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

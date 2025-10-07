@@ -23,8 +23,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = getLocalStorage('jwt');
-    const savedUser = getLocalStorage('user');
+    const token = localStorage.getItem('jwt');
+    const savedUser = localStorage.getItem('user');
     
     if (token && savedUser) {
       try {
@@ -40,8 +40,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response: AuthResponse = await authService.login({ email, password });
     const userData = { userId: response.userId, email: response.email };
     
-    setLocalStorage('jwt', response.token);
-    setLocalStorage('user', JSON.stringify(userData));
+    localStorage.setItem('jwt', response.token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
@@ -49,15 +49,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response: AuthResponse = await authService.register({ email, password });
     const userData = { userId: response.userId, email: response.email };
     
-    setLocalStorage('jwt', response.token);
-    setLocalStorage('user', JSON.stringify(userData));
+    localStorage.setItem('jwt', response.token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
   const logout = () => {
     authService.logout();
-    removeLocalStorage('jwt');
-    removeLocalStorage('user');
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
