@@ -16,7 +16,7 @@ export const Navbar = () => {
     <nav className="border-b-2 p-6 sticky top-0 z-50" style={{ backgroundColor: 'var(--nb-card)', borderColor: 'var(--nb-border)' }}>
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-black tracking-tight hover:opacity-70 transition-opacity">
-          Subsync
+          SubSync
         </Link>
 
         {!isAuthenticated ? (
