@@ -3,22 +3,22 @@ export type SubscriptionStatus = 'active' | 'paused' | 'canceled'
 export type BillingCycle = 'monthly' | 'yearly' | 'weekly' | 'quarterly'
 
 export interface Subscription {
-  id: string
+  _id: string
   serviceName: string
   price: number
   billingCycle: BillingCycle
   renewalDate: string
-  paymentMethod: string
+  paymentMethod?: string
+  category?: string
   status: SubscriptionStatus
   notes?: string
-  logo?: string
   createdAt: string
-  totalSpent?: number
+  userId: string
 }
 
 export interface SubscriptionStats {
-  totalMonthlySpend: number
-  nextRenewal: string
-  averageCost: number
+  totalMonthly: string
   activeCount: number
+  totalCount: number
+  nextRenewal: string | null
 }
