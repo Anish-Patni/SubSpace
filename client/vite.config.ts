@@ -20,9 +20,9 @@ export default defineConfig({
         'logo.png',
       ],
       manifest: {
-        name: 'UITEMPLATE',
-        short_name: 'UITEMPLATE',
-        description: 'UITEMPLATE - description',
+        name: 'SubSpace',
+        short_name: 'SubSpace',
+        description: 'SubSpace - description',
         icons: [
           {
             src: '/android-chrome-192x192.png',
