@@ -2,16 +2,16 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import AppRoutes from '@/router/routes'
 import { CommandMenu } from '@/components/CommandMenu'
 import { Toaster } from '@/components/ui/sonner'
-import { AuthProvider } from '@/context/AuthContext'
+import { CivicAuthProvider } from '@/context/CivicAuthProvider'
 
 function App() {
   return (
     <Router>
-      <AuthProvider>
+      <CivicAuthProvider>
         <CommandMenu />
         <AppRoutes />
         <Toaster />
-      </AuthProvider>
+      </CivicAuthProvider>
     </Router>
   )
 }

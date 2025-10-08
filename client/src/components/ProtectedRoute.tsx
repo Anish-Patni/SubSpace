@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useUser } from '@/context/CivicAuthProvider';
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isLoading } = useUser();
 
   if (isLoading) {
     return (
@@ -12,8 +12,8 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
