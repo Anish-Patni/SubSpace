@@ -20,6 +20,7 @@ module.exports = {
   theme: {
     fontFamily: {
       geist: ["geist", "sans-serif"],
+      mono: ["'Overpass Mono'", "monospace"],
     },
     container: {
       center: true,

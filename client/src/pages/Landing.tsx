@@ -5,11 +5,19 @@ import { Footer } from '@/components/Footer'
 
 export const Landing = () => {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fef9ec' }}>
+    <div className="min-h-screen relative" style={{ backgroundColor: '#fef9ec' }}>
+      {/* Background Grid */}
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `
+          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px'
+      }}></div>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
+      <section className="max-w-7xl mx-auto px-6 py-24 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div className="space-y-8">
@@ -24,7 +32,7 @@ export const Landing = () => {
             </div>
 
             <p className="text-xl font-bold text-gray-800 leading-relaxed max-w-lg">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              Take control of your recurring payments. Track subscriptions, get renewal alerts, and discover exactly where your money goes each month with AI-powered insights.
             </p>
 
             <div className="flex gap-6">
@@ -94,7 +102,7 @@ export const Landing = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
+      <section className="max-w-7xl mx-auto px-6 py-24 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-7xl font-black text-black mb-6">FEATURES</h2>
           <div className="w-32 h-4 bg-custom-orange border-4 border-black mx-auto transform rotate-2"></div>
