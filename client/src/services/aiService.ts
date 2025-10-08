@@ -14,5 +14,10 @@ export const aiService = {
   async extractSubscription(input: string): Promise<AIExtractedData> {
     const response = await axiosInstance.post('/ai/extract', { input });
     return response.data;
+  },
+  
+  async createSubscription(input: string): Promise<any> {
+    const response = await axiosInstance.post('/ai/create', { input });
+    return response.data;
   }
 };

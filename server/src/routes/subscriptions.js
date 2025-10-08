@@ -45,18 +45,34 @@ router.post('/',
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('=== SUBSCRIPTION CREATE VALIDATION ERROR ===');
+      console.log('Errors:', errors.array());
+      console.log('Request body:', req.body);
+      console.log('==========================================');
       return res.status(400).json({ errors: errors.array() });
     }
 
     try {
+      console.log('=== CREATING SUBSCRIPTION ===');
+      console.log('User ID:', req.userId);
+      console.log('Request body:', req.body);
+      
       const subscription = new Subscription({
         ...req.body,
         userId: req.userId
       });
       
+      console.log('Subscription object before save:', subscription);
       await subscription.save();
+      console.log('Subscription saved successfully:', subscription._id);
+      console.log('============================');
+      
       res.status(201).json(subscription);
     } catch (error) {
+      console.error('=== SUBSCRIPTION CREATE ERROR ===');
+      console.error('Error:', error.message);
+      console.error('Stack:', error.stack);
+      console.error('================================');
       res.status(500).json({ error: 'Server error' });
     }
   }

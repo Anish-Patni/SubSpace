@@ -4,7 +4,7 @@ import { Sparkles } from 'lucide-react'
 import { BillingCycle } from '@/types/subscription'
 import { Navbar } from '@/components/Navbar'
 import { subscriptionService } from '@/services/subscriptionService'
-import { aiService, AIExtractedData } from '@/services/aiService'
+import { aiService } from '@/services/aiService'
 import { toast } from 'sonner'
 
 export const AddSubscription = () => {
@@ -26,7 +26,6 @@ export const AddSubscription = () => {
   // AI form state
   const [aiInput, setAiInput] = useState('')
   const [aiProcessing, setAiProcessing] = useState(false)
-  const [aiExtracted, setAiExtracted] = useState<AIExtractedData | null>(null)
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,39 +59,20 @@ export const AddSubscription = () => {
 
     setAiProcessing(true)
     try {
-      const extracted = await aiService.extractSubscription(aiInput)
-      setAiExtracted(extracted)
-      toast.success('Subscription details extracted!')
+      // Use the direct AI create endpoint - one step process!
+      const result = await aiService.createSubscription(aiInput)
+      console.log('AI create result:', result)
+      
+      toast.success('Subscription added successfully!')
+      navigate('/dashboard')
     } catch (error: any) {
+      console.error('AI create error:', error)
       toast.error(error.response?.data?.error || 'Failed to process with AI')
     } finally {
       setAiProcessing(false)
     }
   }
 
-  const handleAiConfirm = async () => {
-    if (!aiExtracted) return
-    setIsSubmitting(true)
-
-    try {
-      await subscriptionService.create({
-        serviceName: aiExtracted.serviceName,
-        price: aiExtracted.price,
-        billingCycle: aiExtracted.billingCycle,
-        renewalDate: aiExtracted.renewalDate,
-        paymentMethod: aiExtracted.paymentMethod,
-        category: aiExtracted.category,
-        notes: aiExtracted.notes
-      })
-      
-      toast.success('Subscription added successfully!')
-      navigate('/dashboard')
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to add subscription')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
@@ -256,77 +236,10 @@ export const AddSubscription = () => {
                 style={{ backgroundColor: 'var(--nb-accent-2)' }}
               >
                 <Sparkles size={24} />
-                {aiProcessing ? 'Processing...' : 'Process with AI'}
+                {aiProcessing ? 'Adding Subscription...' : 'Add Subscription with AI'}
               </button>
             </div>
 
-            {/* AI Extracted Preview */}
-            {aiExtracted && (
-              <div 
-                className="border-4 border-black p-8 space-y-4"
-                style={{ backgroundColor: 'var(--nb-card)' }}
-              >
-                <h3 className="text-2xl font-black mb-4">Extracted Information</h3>
-                
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="border-3 border-black p-4">
-                    <p className="font-bold mb-1">Service Name</p>
-                    <p className="text-lg">{aiExtracted.serviceName}</p>
-                  </div>
-                  <div className="border-3 border-black p-4">
-                    <p className="font-bold mb-1">Price</p>
-                    <p className="text-lg">${aiExtracted.price}</p>
-                  </div>
-                  <div className="border-3 border-black p-4">
-                    <p className="font-bold mb-1">Billing Cycle</p>
-                    <p className="text-lg capitalize">{aiExtracted.billingCycle}</p>
-                  </div>
-                  <div className="border-3 border-black p-4">
-                    <p className="font-bold mb-1">Renewal Date</p>
-                    <p className="text-lg">{new Date(aiExtracted.renewalDate).toLocaleDateString()}</p>
-                  </div>
-                  {aiExtracted.paymentMethod && (
-                    <div className="border-3 border-black p-4">
-                      <p className="font-bold mb-1">Payment Method</p>
-                      <p className="text-lg">{aiExtracted.paymentMethod}</p>
-                    </div>
-                  )}
-                  {aiExtracted.category && (
-                    <div className="border-3 border-black p-4">
-                      <p className="font-bold mb-1">Category</p>
-                      <p className="text-lg">{aiExtracted.category}</p>
-                    </div>
-                  )}
-                  {aiExtracted.notes && (
-                    <div className="border-3 border-black p-4 md:col-span-2">
-                      <p className="font-bold mb-1">Notes</p>
-                      <p className="text-lg">{aiExtracted.notes}</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => {
-                      setAiExtracted(null)
-                      setAiInput('')
-                    }}
-                    className="flex-1 py-4 border-4 border-black font-black text-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
-                    style={{ backgroundColor: 'var(--nb-warn)' }}
-                  >
-                    Try Again
-                  </button>
-                  <button
-                    onClick={handleAiConfirm}
-                    disabled={isSubmitting}
-                    className="flex-1 py-4 border-4 border-black font-black text-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: 'var(--nb-ok)' }}
-                  >
-                    {isSubmitting ? 'Adding...' : 'Confirm & Add'}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
