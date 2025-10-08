@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/Navbar'
+import { Footer } from '@/components/Footer'
 import { subscriptionService } from '@/services/subscriptionService'
 import { Subscription } from '@/types/subscription'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts'
@@ -188,22 +189,7 @@ export const Analytics = () => {
               <p className="text-center py-12 text-gray-500">No data available</p>
             )}
           </div>
-
-          {/* Monthly Projection */}
-          <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lg:col-span-2" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <h2 className="text-2xl font-black mb-6">6-Month Spending Projection</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyProjection}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#000" />
-                <XAxis dataKey="month" stroke="#000" />
-                <YAxis stroke="#000" />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="amount" stroke="#FF6B6B" strokeWidth={3} name="Monthly Cost ($)" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        </div> 
 
         {/* Top Subscriptions */}
         <div className="mt-8 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
@@ -227,6 +213,8 @@ export const Analytics = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   )
 }

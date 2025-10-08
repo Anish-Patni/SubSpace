@@ -15,6 +15,12 @@
     --nb-ok: #2AAE62;
     --nb-card: #FFFFFF;
     
+        /* Custom Color Palette */
+        --custom-green: #90EE90;
+        --custom-yellow: #F4D738;
+        --custom-lavender: #C4A1FF;
+        --custom-orange: #FF4911;
+    
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;

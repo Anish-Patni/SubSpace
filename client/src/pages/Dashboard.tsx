@@ -4,6 +4,7 @@ import { Subscription, SubscriptionStatus } from '@/types/subscription'
 import { SubscriptionCard } from '@/components/SubscriptionCard'
 import { StatsCard } from '@/components/StatsCard'
 import { Navbar } from '@/components/Navbar'
+import { Footer } from '@/components/Footer'
 import { subscriptionService } from '@/services/subscriptionService'
 import { toast } from 'sonner'
 
@@ -137,6 +138,8 @@ export const Dashboard = () => {
           </>
         )}
       </div>
+      
+      <Footer />
     </div>
   )
 }

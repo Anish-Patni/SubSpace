@@ -41,12 +41,12 @@ export const CalendarView = () => {
   const getSubscriptionsForDay = (day: number) => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
-    
+
     return subscriptions.filter(sub => {
       const renewalDate = new Date(sub.renewalDate)
-      return renewalDate.getDate() === day && 
-             renewalDate.getMonth() === month &&
-             renewalDate.getFullYear() === year
+      return renewalDate.getDate() === day &&
+        renewalDate.getMonth() === month &&
+        renewalDate.getFullYear() === year
     })
   }
 
@@ -60,9 +60,9 @@ export const CalendarView = () => {
 
   const today = new Date()
   const isToday = (day: number) => {
-    return day === today.getDate() && 
-           currentDate.getMonth() === today.getMonth() &&
-           currentDate.getFullYear() === today.getFullYear()
+    return day === today.getDate() &&
+      currentDate.getMonth() === today.getMonth() &&
+      currentDate.getFullYear() === today.getFullYear()
   }
 
   const daysInMonth = getDaysInMonth(currentDate)
@@ -107,141 +107,142 @@ export const CalendarView = () => {
           </div>
         </div>
 
-        {/* Calendar Navigation */}
-        <div className="border-4 border-black mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-          <div className="flex items-center justify-between p-6 border-b-4 border-black">
-            <button
-              onClick={previousMonth}
-              className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
-              style={{ backgroundColor: 'var(--nb-bg)' }}
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <h2 className="text-3xl font-black">{monthName}</h2>
-            <button
-              onClick={nextMonth}
-              className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
-              style={{ backgroundColor: 'var(--nb-bg)' }}
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="p-6">
-            {/* Day Headers */}
-            <div className="grid grid-cols-7 gap-2 mb-4">
-              {days.map(day => (
-                <div key={day} className="text-center font-black text-lg p-2">
-                  {day}
-                </div>
-              ))}
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left: Calendar */}
+          <div className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center justify-between p-6 border-b-4 border-black">
+              <button
+                onClick={previousMonth}
+                className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                style={{ backgroundColor: 'var(--nb-bg)' }}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <h2 className="text-3xl font-black">{monthName}</h2>
+              <button
+                onClick={nextMonth}
+                className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                style={{ backgroundColor: 'var(--nb-bg)' }}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
             </div>
 
-            {/* Calendar Days */}
-            <div className="grid grid-cols-7 gap-2">
-              {/* Empty cells for days before month starts */}
-              {Array.from({ length: firstDay }).map((_, index) => (
-                <div key={`empty-${index}`} className="aspect-square" />
-              ))}
+            {/* Calendar Grid */}
+            <div className="p-6">
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {days.map(day => (
+                  <div key={day} className="text-center font-black text-sm p-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
 
-              {/* Actual days */}
-              {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
-                const daySubs = getSubscriptionsForDay(day)
-                const dayTotal = daySubs.reduce((sum, sub) => sum + sub.price, 0)
-                const isTodayDate = isToday(day)
+              {/* Calendar Days */}
+              <div className="grid grid-cols-7 gap-2">
+                {/* Empty cells for days before month starts */}
+                {Array.from({ length: firstDay }).map((_, index) => (
+                  <div key={`empty-${index}`} className="aspect-square" />
+                ))}
 
-                return (
-                  <div
-                    key={day}
-                    className={`aspect-square border-3 border-black p-2 relative ${
-                      isTodayDate ? 'ring-4 ring-offset-2' : ''
-                    }`}
-                    style={{ 
-                      backgroundColor: daySubs.length > 0 ? 'var(--nb-accent)' : 'var(--nb-bg)',
-                      ringColor: isTodayDate ? 'var(--nb-accent-2)' : undefined
-                    }}
-                  >
-                    <div className="font-black text-lg mb-1">{day}</div>
-                    {daySubs.length > 0 && (
-                      <div className="space-y-1">
-                        {daySubs.slice(0, 2).map(sub => (
-                          <div
-                            key={sub._id}
-                            onClick={() => navigate(`/subscription/${sub._id}`)}
-                            className="text-xs font-bold p-1 border-2 border-black cursor-pointer hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all truncate"
-                            style={{ backgroundColor: 'var(--nb-card)' }}
-                            title={`${sub.serviceName} - $${sub.price}`}
-                          >
-                            {sub.serviceName}
+                {/* Actual days */}
+                {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
+                  const daySubs = getSubscriptionsForDay(day)
+                  const dayTotal = daySubs.reduce((sum, sub) => sum + sub.price, 0)
+                  const isTodayDate = isToday(day)
+
+                  return (
+                    <div
+                      key={day}
+                      className={`aspect-square border-3 border-black p-1 relative ${isTodayDate ? 'ring-4 ring-offset-2 ring-blue-500' : ''
+                        }`}
+                      style={{
+                        backgroundColor: daySubs.length > 0 ? 'var(--nb-accent)' : 'var(--nb-bg)'
+                      }}
+                    >
+                      <div className="font-black text-sm mb-1">{day}</div>
+                      {daySubs.length > 0 && (
+                        <div className="space-y-1">
+                          {daySubs.slice(0, 1).map(sub => (
+                            <div
+                              key={sub._id}
+                              onClick={() => navigate(`/subscription/${sub._id}`)}
+                              className="text-[10px] font-bold p-0.5 border border-black cursor-pointer hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all truncate"
+                              style={{ backgroundColor: 'var(--nb-card)' }}
+                              title={`${sub.serviceName} - $${sub.price}`}
+                            >
+                              {sub.serviceName.slice(0, 8)}
+                            </div>
+                          ))}
+                          {daySubs.length > 1 && (
+                            <div className="text-[10px] font-bold text-center">
+                              +{daySubs.length - 1}
+                            </div>
+                          )}
+                          <div className="text-[10px] font-black text-center">
+                            ${dayTotal.toFixed(0)}
                           </div>
-                        ))}
-                        {daySubs.length > 2 && (
-                          <div className="text-xs font-bold text-center">
-                            +{daySubs.length - 2} more
-                          </div>
-                        )}
-                        <div className="text-xs font-black text-center mt-1">
-                          ${dayTotal.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Upcoming Renewals List */}
+          <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <h2 className="text-2xl font-black mb-6">Upcoming Renewals</h2>
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+              {subscriptions
+                .filter(sub => {
+                  const renewalDate = new Date(sub.renewalDate)
+                  return renewalDate.getMonth() === currentDate.getMonth() &&
+                    renewalDate.getFullYear() === currentDate.getFullYear()
+                })
+                .sort((a, b) => new Date(a.renewalDate).getDate() - new Date(b.renewalDate).getDate())
+                .map(sub => {
+                  const renewalDate = new Date(sub.renewalDate)
+                  const isPast = renewalDate < today
+
+                  return (
+                    <div
+                      key={sub._id}
+                      onClick={() => navigate(`/subscription/${sub._id}`)}
+                      className="flex items-center justify-between border-3 border-black p-4 cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                      style={{
+                        backgroundColor: isPast ? 'var(--nb-bg)' : 'var(--nb-card)',
+                        opacity: isPast ? 0.6 : 1
+                      }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="text-center border-2 border-black p-2 min-w-[60px]" style={{ backgroundColor: 'var(--nb-accent)' }}>
+                          <div className="text-2xl font-black">{renewalDate.getDate()}</div>
+                          <div className="text-xs font-bold">{renewalDate.toLocaleDateString('en-US', { month: 'short' })}</div>
+                        </div>
+                        <div>
+                          <p className="font-black text-lg">{sub.serviceName}</p>
+                          <p className="text-sm capitalize">{sub.billingCycle} • {sub.category || 'Uncategorized'}</p>
                         </div>
                       </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Upcoming Renewals List */}
-        <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-          <h2 className="text-2xl font-black mb-6">Upcoming Renewals This Month</h2>
-          <div className="space-y-3">
-            {subscriptions
-              .filter(sub => {
+                      <div className="text-right">
+                        <p className="text-2xl font-black">${sub.price.toFixed(2)}</p>
+                        {isPast && <p className="text-xs font-bold text-red-600">Past Due</p>}
+                      </div>
+                    </div>
+                  )
+                })}
+              {subscriptions.filter(sub => {
                 const renewalDate = new Date(sub.renewalDate)
                 return renewalDate.getMonth() === currentDate.getMonth() &&
-                       renewalDate.getFullYear() === currentDate.getFullYear()
-              })
-              .sort((a, b) => new Date(a.renewalDate).getDate() - new Date(b.renewalDate).getDate())
-              .map(sub => {
-                const renewalDate = new Date(sub.renewalDate)
-                const isPast = renewalDate < today
-                
-                return (
-                  <div
-                    key={sub._id}
-                    onClick={() => navigate(`/subscription/${sub._id}`)}
-                    className="flex items-center justify-between border-3 border-black p-4 cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
-                    style={{ 
-                      backgroundColor: isPast ? 'var(--nb-bg)' : 'var(--nb-card)',
-                      opacity: isPast ? 0.6 : 1
-                    }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-center border-2 border-black p-2 min-w-[60px]" style={{ backgroundColor: 'var(--nb-accent)' }}>
-                        <div className="text-2xl font-black">{renewalDate.getDate()}</div>
-                        <div className="text-xs font-bold">{renewalDate.toLocaleDateString('en-US', { month: 'short' })}</div>
-                      </div>
-                      <div>
-                        <p className="font-black text-lg">{sub.serviceName}</p>
-                        <p className="text-sm capitalize">{sub.billingCycle} • {sub.category || 'Uncategorized'}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-black">${sub.price.toFixed(2)}</p>
-                      {isPast && <p className="text-xs font-bold text-red-600">Past Due</p>}
-                    </div>
-                  </div>
-                )
-              })}
-            {subscriptions.filter(sub => {
-              const renewalDate = new Date(sub.renewalDate)
-              return renewalDate.getMonth() === currentDate.getMonth() &&
-                     renewalDate.getFullYear() === currentDate.getFullYear()
-            }).length === 0 && (
-              <p className="text-center py-8 text-gray-500">No renewals this month</p>
-            )}
+                  renewalDate.getFullYear() === currentDate.getFullYear()
+              }).length === 0 && (
+                  <p className="text-center py-8 text-gray-500">No renewals this month</p>
+                )}
+            </div>
           </div>
         </div>
       </div>

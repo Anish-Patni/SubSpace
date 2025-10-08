@@ -13,95 +13,57 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className="border-b-2 p-6 sticky top-0 z-50" style={{ backgroundColor: 'var(--nb-card)', borderColor: 'var(--nb-border)' }}>
+    <nav className="border-t-2 border-b-2 border-black p-5 sticky top-0 z-50 bg-white">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-black tracking-tight hover:opacity-70 transition-opacity">
-          SubSync
-        </Link>
+        {/* Left Navigation Links */}
+        <div className="flex gap-8">
+          <Link to="/" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+            Home
+          </Link>
+          {/* <Link to="/dashboard" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+            Explore
+          </Link> */}
+          {/* <Link to="/settings" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+            Settings
+          </Link> */}
+        </div>
 
+        {/* Right Authentication */}
         {!isAuthenticated ? (
-          <div className="flex gap-3">
-            <Link to="/login">
-              <button className="px-6 py-2.5 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-                Login
-              </button>
+          <div className="flex items-center gap-6">
+            <Link to="/login" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+              Log-In
             </Link>
             <Link to="/register">
-              <button
-                className="px-6 py-2.5 font-semibold rounded-lg text-white shadow-lg hover:shadow-xl transition-all"
-                style={{ backgroundColor: 'var(--nb-accent)' }}
-              >
-                Sign Up
+              <button className="px-4 py-2 bg-custom-yellow border-3 border-black font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all rounded text-sm">
+                Sign-Up
               </button>
             </Link>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <Link to="/">
-              <button className="px-4 py-2.5 font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2">
-                <Home size={20} />
-                <span className="hidden md:inline">Home</span>
-              </button>
+          <div className="flex items-center gap-6">
+            {/* <Link to="/" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+              Home
+            </Link> */}
+            <Link to="/dashboard" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+              Dashboard
             </Link>
-
-            <Link to="/dashboard">
-              <button
-                className={`px-4 py-2.5 font-semibold rounded-lg transition-colors flex items-center gap-2 ${location.pathname === '/dashboard' || location.pathname.startsWith('/subscription/')
-                  ? 'bg-gray-100'
-                  : 'hover:bg-gray-100'
-                  }`}
-              >
-                <LayoutDashboard size={20} />
-                <span className="hidden md:inline">Dashboard</span>
-              </button>
+            <Link to="/analytics" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+              Analytics
             </Link>
-
-            <Link to="/analytics">
-              <button
-                className={`px-4 py-2.5 font-semibold rounded-lg transition-colors flex items-center gap-2 ${location.pathname === '/analytics'
-                  ? 'bg-gray-100'
-                  : 'hover:bg-gray-100'
-                  }`}
-              >
-                <BarChart3 size={20} />
-                <span className="hidden md:inline">Analytics</span>
-              </button>
+            <Link to="/calendar" className="text-lg font-black text-black hover:opacity-70 transition-opacity">
+              Calendar
             </Link>
-
-            <Link to="/calendar">
-              <button
-                className={`px-4 py-2.5 font-semibold rounded-lg transition-colors flex items-center gap-2 ${location.pathname === '/calendar'
-                  ? 'bg-gray-100'
-                  : 'hover:bg-gray-100'
-                  }`}
-              >
-                <Calendar size={20} />
-                <span className="hidden md:inline">Calendar</span>
-              </button>
-            </Link>
-
             <Link to="/add">
-              <button
-                className="px-5 py-2.5 font-semibold rounded-lg text-white shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
-                style={{ backgroundColor: 'var(--nb-accent)' }}
-              >
-                <Plus size={20} />
-                <span className="hidden md:inline">Add</span>
+              <button className="px-4 py-2 bg-custom-yellow border-3 border-black font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all rounded text-sm">
+                Add
               </button>
             </Link>
-
-            <Link to="/settings">
-              <button className="px-4 py-2.5 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-                <Settings size={20} />
-              </button>
-            </Link>
-
             <button
               onClick={handleLogout}
-              className="px-4 py-2.5 font-semibold rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors flex items-center gap-2"
+              className="text-lg font-black text-black hover:opacity-70 transition-opacity"
             >
-              <LogOut size={20} />
-              <span className="hidden md:inline">Logout</span>
+              Logout
             </button>
           </div>
         )}
