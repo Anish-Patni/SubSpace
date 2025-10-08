@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Plus, LayoutDashboard, Home, Settings, LogOut } from 'lucide-react'
+import { Plus, LayoutDashboard, Home, Settings, LogOut, BarChart3, Calendar } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 export const Navbar = () => {
@@ -53,6 +53,30 @@ export const Navbar = () => {
               >
                 <LayoutDashboard size={20} />
                 <span className="hidden md:inline">Dashboard</span>
+              </button>
+            </Link>
+
+            <Link to="/analytics">
+              <button
+                className={`px-4 py-2.5 font-semibold rounded-lg transition-colors flex items-center gap-2 ${location.pathname === '/analytics'
+                  ? 'bg-gray-100'
+                  : 'hover:bg-gray-100'
+                  }`}
+              >
+                <BarChart3 size={20} />
+                <span className="hidden md:inline">Analytics</span>
+              </button>
+            </Link>
+
+            <Link to="/calendar">
+              <button
+                className={`px-4 py-2.5 font-semibold rounded-lg transition-colors flex items-center gap-2 ${location.pathname === '/calendar'
+                  ? 'bg-gray-100'
+                  : 'hover:bg-gray-100'
+                  }`}
+              >
+                <Calendar size={20} />
+                <span className="hidden md:inline">Calendar</span>
               </button>
             </Link>
 
