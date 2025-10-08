@@ -58,10 +58,18 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
+    <div className="min-h-screen relative" style={{ backgroundColor: '#fef9ec', color: 'var(--nb-ink)' }}>
+      {/* Background Grid */}
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `
+          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px'
+      }}></div>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         {/* Stats Section */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatsCard 
