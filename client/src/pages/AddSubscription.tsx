@@ -76,206 +76,180 @@ export const AddSubscription = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-pink-50 to-yellow-50">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        {/* Hero Section */}
-        <div className="mb-16">
-          <div className="relative">
-            <h1 className="text-9xl font-black text-black mb-4 leading-none tracking-tighter">
-              ADD
-            </h1>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-neon-pink border-4 border-black transform rotate-12"></div>
-            <div className="absolute -bottom-2 -left-2 w-16 h-16 bg-neon-cyan border-4 border-black transform -rotate-12"></div>
-          </div>
-          <div className="relative">
-            <h2 className="text-7xl font-black text-neon-purple mb-8 leading-none tracking-tighter">
-              SUBSCRIPTION
-            </h2>
-            <div className="absolute top-0 -right-8 w-8 h-8 bg-neon-yellow border-4 border-black transform rotate-45"></div>
-          </div>
-          <p className="text-2xl font-bold text-gray-800 max-w-2xl">
-            Track your recurring payments with brutal efficiency
+      <div className="max-w-5xl mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-6xl font-black mb-4 tracking-tight">Add Subscription</h1>
+          <p className="text-xl font-semibold text-gray-600">
+            Track your recurring payments with ease
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="grid grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-2 gap-6 mb-8">
           <button
             onClick={() => setActiveTab('manual')}
-            className={`relative py-8 border-6 border-black font-black text-3xl transition-all duration-200 ${
+            className={`py-6 border-4 border-black font-black text-2xl transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
               activeTab === 'manual' 
-                ? 'shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] bg-neon-cyan transform -rotate-2' 
-                : 'hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-2 hover:-translate-y-2 bg-white hover:bg-neon-cyan/20'
+                ? 'translate-x-0 translate-y-0' 
+                : 'hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]'
             }`}
+            style={{ backgroundColor: activeTab === 'manual' ? 'var(--nb-accent)' : 'var(--nb-card)' }}
           >
-            <span className="relative z-10">MANUAL</span>
-            <div className="absolute -top-3 -right-3 w-8 h-8 bg-neon-pink border-4 border-black transform rotate-45"></div>
-            <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-neon-yellow border-3 border-black transform -rotate-12"></div>
+            Manual Entry
           </button>
           <button
             onClick={() => setActiveTab('ai')}
-            className={`relative py-8 border-6 border-black font-black text-3xl transition-all duration-200 flex items-center justify-center gap-4 ${
+            className={`py-6 border-4 border-black font-black text-2xl transition-all flex items-center justify-center gap-3 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
               activeTab === 'ai' 
-                ? 'shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] bg-neon-purple transform rotate-2' 
-                : 'hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-2 hover:-translate-y-2 bg-white hover:bg-neon-purple/20'
+                ? 'translate-x-0 translate-y-0' 
+                : 'hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]'
             }`}
+            style={{ backgroundColor: activeTab === 'ai' ? 'var(--nb-accent-2)' : 'var(--nb-card)' }}
           >
-            <Sparkles size={32} className="relative z-10" />
-            <span className="relative z-10">AI</span>
-            <div className="absolute -top-3 -right-3 w-8 h-8 bg-neon-cyan border-4 border-black transform rotate-45"></div>
-            <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-neon-pink border-3 border-black transform -rotate-12"></div>
+            <Sparkles size={28} />
+            AI Assistant
           </button>
         </div>
 
         {/* Manual Entry Form */}
         {activeTab === 'manual' && (
           <form onSubmit={handleManualSubmit} className="space-y-8">
-            <div className="border-8 border-black bg-white p-12 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transform -rotate-1">
-              <div className="bg-neon-yellow border-6 border-black p-6 mb-10 transform rotate-1">
-                <h3 className="text-4xl font-black text-black">MANUAL ENTRY</h3>
-                <div className="w-16 h-4 bg-neon-pink border-3 border-black mt-2 transform -rotate-2"></div>
-              </div>
-              
-              <div className="space-y-10">
+            <div className="border-4 border-black p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+              <div className="space-y-6">
                 <div>
-                  <label className="block font-black mb-4 text-2xl text-black">SERVICE NAME</label>
+                  <label className="block font-bold mb-3 text-lg">Service Name</label>
                   <input
                     type="text"
                     required
                     value={formData.serviceName}
                     onChange={(e) => setFormData({...formData, serviceName: e.target.value})}
-                    className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-cyan/20"
-                    placeholder="NETFLIX"
+                    className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
+                    placeholder="Netflix"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-10">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block font-black mb-4 text-2xl text-black">PRICE ($)</label>
+                    <label className="block font-bold mb-3 text-lg">Price ($)</label>
                     <input
                       type="number"
                       step="0.01"
                       required
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
-                      className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-pink/20"
+                      className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
                       placeholder="9.99"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-black mb-4 text-2xl text-black">BILLING CYCLE</label>
+                    <label className="block font-bold mb-3 text-lg">Billing Cycle</label>
                     <select
                       value={formData.billingCycle}
                       onChange={(e) => setFormData({...formData, billingCycle: e.target.value as BillingCycle})}
-                      className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-purple/20"
+                      className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
                     >
-                      <option value="weekly">WEEKLY</option>
-                      <option value="monthly">MONTHLY</option>
-                      <option value="quarterly">QUARTERLY</option>
-                      <option value="yearly">YEARLY</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="yearly">Yearly</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-black mb-4 text-2xl text-black">RENEWAL DATE</label>
+                  <label className="block font-bold mb-3 text-lg">Renewal Date</label>
                   <input
                     type="date"
                     required
                     value={formData.renewalDate}
                     onChange={(e) => setFormData({...formData, renewalDate: e.target.value})}
-                    className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-yellow/20"
+                    className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-10">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block font-black mb-4 text-2xl text-black">PAYMENT METHOD (OPTIONAL)</label>
+                    <label className="block font-bold mb-3 text-lg">Payment Method (Optional)</label>
                     <input
                       type="text"
                       value={formData.paymentMethod}
                       onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                      className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-cyan/20"
-                      placeholder="VISA ****1234"
+                      className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
+                      placeholder="Visa ****1234"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-black mb-4 text-2xl text-black">CATEGORY (OPTIONAL)</label>
+                    <label className="block font-bold mb-3 text-lg">Category (Optional)</label>
                     <input
                       type="text"
                       value={formData.category}
                       onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all bg-neon-pink/20"
-                      placeholder="ENTERTAINMENT, PRODUCTIVITY, ETC."
+                      className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
+                      placeholder="Entertainment, Productivity, etc."
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-black mb-4 text-2xl text-black">NOTES (OPTIONAL)</label>
+                  <label className="block font-bold mb-3 text-lg">Notes (Optional)</label>
                   <textarea
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                    className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all resize-none bg-neon-purple/20"
+                    className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors resize-none"
                     rows={4}
-                    placeholder="ANY ADDITIONAL DETAILS..."
+                    placeholder="Any additional details..."
                   />
                 </div>
               </div>
             </div>
 
-            <div className="mt-16">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-8 border-8 border-black font-black text-4xl shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-2 hover:-translate-y-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-neon-green transform rotate-1"
-              >
-                {isSubmitting ? 'SAVING...' : 'SAVE SUBSCRIPTION'}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-6 border-4 border-black font-black text-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: 'var(--nb-ok)', color: 'white' }}
+            >
+              {isSubmitting ? 'Saving...' : 'Save Subscription'}
+            </button>
           </form>
         )}
 
         {/* AI Entry Form */}
         {activeTab === 'ai' && (
           <div className="space-y-8">
-            <div className="border-8 border-black bg-white p-12 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transform rotate-1">
-              <div className="bg-neon-purple border-6 border-black p-6 mb-10 transform -rotate-1">
-                <h3 className="text-4xl font-black text-white flex items-center gap-4">
-                  <Sparkles size={40} />
-                  AI ASSISTANT
-                </h3>
-                <div className="w-20 h-4 bg-neon-cyan border-3 border-black mt-2 transform rotate-2"></div>
-              </div>
-              
-              <div className="space-y-10">
+            <div className="border-4 border-black p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+              <div className="space-y-6">
                 <div>
-                  <label className="block font-black mb-4 text-2xl text-black">DESCRIBE YOUR SUBSCRIPTION</label>
+                  <label className="block font-bold mb-3 text-lg">Describe Your Subscription</label>
                   <textarea
                     value={aiInput}
                     onChange={(e) => setAiInput(e.target.value)}
-                    className="w-full px-6 py-5 border-6 border-black font-black text-xl focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all resize-none bg-gradient-to-br from-neon-cyan/20 to-neon-pink/20"
+                    className="w-full px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors resize-none"
                     rows={8}
-                    placeholder="E.G., I PAY $9.99 PER MONTH FOR SPOTIFY PREMIUM, RENEWS ON THE 15TH, CHARGED TO MY VISA ENDING IN 1234"
+                    placeholder="E.g., I pay $9.99 per month for Spotify Premium, renews on the 15th, charged to my Visa ending in 1234"
                   />
-                </div>
-                
-                <div className="mt-16">
-                  <button
-                    onClick={handleAiProcess}
-                    disabled={!aiInput || aiProcessing}
-                    className="w-full py-8 border-8 border-black font-black text-4xl shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-2 hover:-translate-y-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-neon-pink to-neon-purple transform -rotate-1 flex items-center justify-center gap-6"
-                  >
-                    <Sparkles size={40} />
-                    {aiProcessing ? 'AI PROCESSING...' : 'ADD WITH AI'}
-                  </button>
+                  <p className="mt-3 text-sm text-gray-600">
+                    Just describe your subscription in natural language and AI will extract the details for you.
+                  </p>
                 </div>
               </div>
             </div>
+
+            <button
+              onClick={handleAiProcess}
+              disabled={!aiInput || aiProcessing}
+              className="w-full py-6 border-4 border-black font-black text-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-4"
+              style={{ backgroundColor: 'var(--nb-accent-2)', color: 'white' }}
+            >
+              <Sparkles size={28} />
+              {aiProcessing ? 'AI Processing...' : 'Add with AI'}
+            </button>
           </div>
         )}
       </div>
