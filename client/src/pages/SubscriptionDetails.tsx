@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, X, Edit, Play, Trash2 } from 'lucide-react'
+import { Pause, X, Play, Trash2 } from 'lucide-react'
 import { Subscription } from '@/types/subscription'
 import { Navbar } from '@/components/Navbar'
 import { subscriptionService } from '@/services/subscriptionService'

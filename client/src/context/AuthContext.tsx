@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService, AuthResponse } from '@/services/authService';
-import { setLocalStorage, getLocalStorage, removeLocalStorage } from '@/utility/helper';
 
 interface User {
   userId: string;

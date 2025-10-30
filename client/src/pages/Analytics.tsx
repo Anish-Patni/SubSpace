@@ -3,7 +3,7 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { subscriptionService } from '@/services/subscriptionService'
 import { Subscription } from '@/types/subscription'
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts'
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { TrendingUp, DollarSign, Calendar, Package } from 'lucide-react'
 
 export const Analytics = () => {
@@ -73,16 +73,6 @@ export const Analytics = () => {
     count: data.count,
     total: parseFloat(data.total.toFixed(2))
   }))
-
-  // Monthly projection (next 6 months)
-  const monthlyProjection = Array.from({ length: 6 }, (_, i) => {
-    const date = new Date()
-    date.setMonth(date.getMonth() + i)
-    return {
-      month: date.toLocaleDateString('en-US', { month: 'short' }),
-      amount: parseFloat(totalMonthly.toFixed(2))
-    }
-  })
 
   const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']
 
@@ -154,12 +144,12 @@ export const Analytics = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`}
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {categoryChartData.map((entry, index) => (
+                    {categoryChartData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="#000" strokeWidth={2} />
                     ))}
                   </Pie>

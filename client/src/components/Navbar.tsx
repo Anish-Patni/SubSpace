@@ -1,9 +1,7 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Plus, LayoutDashboard, Home, Settings, LogOut, BarChart3, Calendar } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 
 export const Navbar = () => {
-  const location = useLocation()
   const navigate = useNavigate()
   const { isAuthenticated, logout } = useAuth()
 
