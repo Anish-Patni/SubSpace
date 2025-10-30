@@ -26,6 +26,16 @@ app.get('/', (req, res) => {
   res.json({ message: 'SubSpace API' });
 });
 
+// Health check endpoint for cronjobs
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    service: 'SubSpace API'
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
