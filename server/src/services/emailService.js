@@ -136,6 +136,75 @@ class EmailService {
     };
 
     await this.getTransporter().sendMail(mailOptions);
+
+    // Send to shared users as well
+    if (subscription.sharedWith && subscription.sharedWith.length > 0) {
+      for (const sharedEmail of subscription.sharedWith) {
+        const sharedMailOptions = {
+          ...mailOptions,
+          to: sharedEmail,
+          html: mailOptions.html.replace('Make sure your payment method is up to date!', 'This is a shared subscription. Contact the subscription owner for any changes.'),
+        };
+        await this.getTransporter().sendMail(sharedMailOptions);
+      }
+    }
+  }
+
+  // Send email to shared users when added to a subscription
+  async sendSharedSubscriptionEmail(sharedEmail, owner, subscription) {
+    console.log('📧 EmailService: sendSharedSubscriptionEmail called');
+    console.log('   To:', sharedEmail);
+    console.log('   Owner:', owner.email);
+    console.log('   Subscription:', subscription.serviceName);
+
+    const calendarEvent = this.generateCalendarEvent(subscription);
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: sharedEmail,
+      subject: `🤝 ${owner.name || owner.email} shared a subscription with you: ${subscription.serviceName}`,
+      html: `
+        <div style="font-family: 'Courier New', monospace; max-width: 600px; margin: 0 auto; border: 4px solid #1A1A1A; padding: 20px; background-color: #F7F5F2;">
+          <h1 style="color: #1A1A1A; border-bottom: 3px solid #C4A1FF; padding-bottom: 10px;">
+            🤝 Shared Subscription
+          </h1>
+          
+          <p style="color: #1A1A1A; font-size: 16px;">
+            <strong>${owner.name || owner.email}</strong> has shared a subscription with you!
+          </p>
+
+          <div style="background-color: #C4A1FF; border: 3px solid #1A1A1A; padding: 15px; margin: 20px 0;">
+            <h2 style="margin: 0; color: #1A1A1A;">${subscription.serviceName}</h2>
+            <p style="margin: 10px 0;"><strong>Amount:</strong> $${subscription.price}</p>
+            <p style="margin: 10px 0;"><strong>Billing Cycle:</strong> ${subscription.billingCycle}</p>
+            <p style="margin: 10px 0;"><strong>Next Renewal:</strong> ${new Date(subscription.renewalDate).toLocaleDateString()}</p>
+            <p style="margin: 10px 0;"><strong>Payment Method:</strong> ${subscription.paymentMethod}</p>
+          </div>
+
+          <p style="color: #1A1A1A;">
+            You'll receive renewal reminders for this subscription. A calendar event has been attached to help you stay on track!
+          </p>
+
+          <a href="${process.env.APP_URL}/dashboard" 
+             style="display: inline-block; background-color: #FF6F61; color: white; padding: 12px 24px; text-decoration: none; border: 3px solid #1A1A1A; font-weight: bold; margin-top: 20px;">
+            View on SubSpace
+          </a>
+
+          <p style="margin-top: 30px; color: #666; font-size: 12px;">
+            Note: Only the subscription owner (${owner.email}) can modify or cancel this subscription.
+          </p>
+        </div>
+      `,
+      icalEvent: {
+        filename: 'subscription-renewal.ics',
+        method: 'request',
+        content: calendarEvent,
+      },
+    };
+
+    const result = await this.getTransporter().sendMail(mailOptions);
+    console.log('   ✅ Shared subscription email sent! MessageId:', result.messageId);
+    return result;
   }
 
   // Send daily digest of upcoming renewals
@@ -184,6 +253,41 @@ class EmailService {
     };
 
     await this.getTransporter().sendMail(mailOptions);
+
+    // Send digest to all shared users for each subscription
+    for (const subscription of subscriptions) {
+      if (subscription.sharedWith && subscription.sharedWith.length > 0) {
+        for (const sharedEmail of subscription.sharedWith) {
+          const sharedMailOptions = {
+            from: process.env.EMAIL_FROM,
+            to: sharedEmail,
+            subject: `📊 Shared Subscription Reminder: ${subscription.serviceName}`,
+            html: `
+              <div style="font-family: 'Courier New', monospace; max-width: 600px; margin: 0 auto; border: 4px solid #1A1A1A; padding: 20px; background-color: #F7F5F2;">
+                <h1 style="color: #1A1A1A; border-bottom: 3px solid #C4A1FF; padding-bottom: 10px;">
+                  📊 Shared Subscription Reminder
+                </h1>
+                
+                <p style="font-size: 16px; color: #1A1A1A;">
+                  A subscription you're sharing is renewing soon!
+                </p>
+
+                <div style="background-color: #C4A1FF; border: 2px solid #1A1A1A; padding: 10px; margin: 10px 0;">
+                  <strong>${subscription.serviceName}</strong> - $${subscription.price}<br>
+                  Renews: ${new Date(subscription.renewalDate).toLocaleDateString()}
+                </div>
+
+                <a href="${process.env.APP_URL}/dashboard" 
+                   style="display: inline-block; background-color: #FF6F61; color: white; padding: 12px 24px; text-decoration: none; border: 3px solid #1A1A1A; font-weight: bold; margin-top: 20px;">
+                  View Details
+                </a>
+              </div>
+            `,
+          };
+          await this.getTransporter().sendMail(sharedMailOptions);
+        }
+      }
+    }
   }
 }
 

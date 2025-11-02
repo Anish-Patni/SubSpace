@@ -9,6 +9,7 @@ export interface CreateSubscriptionData {
   paymentMethod?: string;
   category?: string;
   notes?: string;
+  sharedWith?: string[];
 }
 
 export interface UpdateSubscriptionData extends Partial<CreateSubscriptionData> {

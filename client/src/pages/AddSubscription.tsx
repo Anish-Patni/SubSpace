@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, X, Plus } from 'lucide-react'
 import { BillingCycle } from '@/types/subscription'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
@@ -23,9 +23,27 @@ export const AddSubscription = () => {
     notes: ''
   })
 
+  // Shared users state
+  const [sharedEmails, setSharedEmails] = useState<string[]>([])
+  const [emailInput, setEmailInput] = useState('')
+
   // AI form state
   const [aiInput, setAiInput] = useState('')
   const [aiProcessing, setAiProcessing] = useState(false)
+
+  const addSharedEmail = () => {
+    const trimmedEmail = emailInput.trim()
+    if (trimmedEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      if (!sharedEmails.includes(trimmedEmail)) {
+        setSharedEmails([...sharedEmails, trimmedEmail])
+        setEmailInput('')
+      }
+    }
+  }
+
+  const removeSharedEmail = (email: string) => {
+    setSharedEmails(sharedEmails.filter(e => e !== email))
+  }
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,7 +57,8 @@ export const AddSubscription = () => {
         renewalDate: formData.renewalDate,
         paymentMethod: formData.paymentMethod || undefined,
         category: formData.category || undefined,
-        notes: formData.notes || undefined
+        notes: formData.notes || undefined,
+        sharedWith: sharedEmails.length > 0 ? sharedEmails : undefined
       })
       
       navigate('/dashboard')
@@ -200,6 +219,60 @@ export const AddSubscription = () => {
                     rows={4}
                     placeholder="Any additional details..."
                   />
+                </div>
+
+                <div>
+                  <label className="block font-bold mb-3 text-lg">
+                    Share with Others (Optional)
+                  </label>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Add email addresses of people who share this subscription. They'll receive notifications about renewals.
+                  </p>
+                  
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          addSharedEmail()
+                        }
+                      }}
+                      className="flex-1 px-5 py-4 border-2 border-black font-semibold text-lg focus:outline-none focus:border-gray-400 transition-colors"
+                      placeholder="friend@example.com"
+                    />
+                    <button
+                      type="button"
+                      onClick={addSharedEmail}
+                      className="px-6 py-4 border-2 border-black font-bold text-lg hover:bg-gray-100 transition-colors"
+                      style={{ backgroundColor: 'var(--nb-accent-2)' }}
+                    >
+                      <Plus size={20} />
+                    </button>
+                  </div>
+
+                  {sharedEmails.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {sharedEmails.map((email) => (
+                        <div
+                          key={email}
+                          className="flex items-center gap-2 px-4 py-2 border-2 border-black font-semibold"
+                          style={{ backgroundColor: 'var(--nb-accent-2)' }}
+                        >
+                          <span>{email}</span>
+                          <button
+                            type="button"
+                            onClick={() => removeSharedEmail(email)}
+                            className="hover:opacity-70 transition-opacity"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

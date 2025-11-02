@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, X, Play, Trash2 } from 'lucide-react'
+import { Pause, X, Play, Trash2, Plus, UserPlus } from 'lucide-react'
 import { Subscription } from '@/types/subscription'
 import { Navbar } from '@/components/Navbar'
 import { subscriptionService } from '@/services/subscriptionService'
@@ -11,6 +11,8 @@ export const SubscriptionDetails = () => {
   const navigate = useNavigate()
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [emailInput, setEmailInput] = useState('')
+  const [isAddingUser, setIsAddingUser] = useState(false)
 
   useEffect(() => {
     loadSubscription()
@@ -48,6 +50,56 @@ export const SubscriptionDetails = () => {
       navigate('/dashboard')
     } catch (error: any) {
       toast.error('Failed to delete subscription')
+    }
+  }
+
+  const addSharedUser = async () => {
+    if (!id || !subscription) return
+    
+    const trimmedEmail = emailInput.trim()
+    if (!trimmedEmail) {
+      toast.error('Please enter an email address')
+      return
+    }
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error('Please enter a valid email address')
+      return
+    }
+    
+    const currentShared = subscription.sharedWith || []
+    if (currentShared.includes(trimmedEmail)) {
+      toast.error('This user is already added')
+      return
+    }
+    
+    try {
+      setIsAddingUser(true)
+      const updatedShared = [...currentShared, trimmedEmail]
+      await subscriptionService.update(id, { sharedWith: updatedShared })
+      toast.success(`Added ${trimmedEmail}`)
+      setEmailInput('')
+      loadSubscription()
+    } catch (error: any) {
+      toast.error('Failed to add user')
+    } finally {
+      setIsAddingUser(false)
+    }
+  }
+
+  const removeSharedUser = async (email: string) => {
+    if (!id || !subscription) return
+    
+    if (!confirm(`Remove ${email} from this subscription?`)) return
+    
+    try {
+      const currentShared = subscription.sharedWith || []
+      const updatedShared = currentShared.filter(e => e !== email)
+      await subscriptionService.update(id, { sharedWith: updatedShared })
+      toast.success(`Removed ${email}`)
+      loadSubscription()
+    } catch (error: any) {
+      toast.error('Failed to remove user')
     }
   }
 
@@ -102,7 +154,18 @@ export const SubscriptionDetails = () => {
               {subscription.serviceName.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 className="text-4xl font-black mb-2">{subscription.serviceName}</h1>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-4xl font-black">{subscription.serviceName}</h1>
+                {subscription.isShared && (
+                  <div 
+                    className="px-4 py-2 border-2 border-black font-bold text-sm flex items-center gap-2"
+                    style={{ backgroundColor: 'var(--nb-accent-2)' }}
+                  >
+                    <UserPlus size={16} />
+                    SHARED WITH YOU
+                  </div>
+                )}
+              </div>
               <div
                 className="inline-block px-4 py-1 border-2 border-black font-bold"
                 style={{ backgroundColor: statusColors[subscription.status] }}
@@ -164,46 +227,145 @@ export const SubscriptionDetails = () => {
           </div>
         </div>
 
+        {/* Shared Users Section */}
+        <div
+          className="border-4 border-black p-8 mb-8"
+          style={{ backgroundColor: 'var(--nb-card)' }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <UserPlus size={24} />
+            <h2 className="text-2xl font-black">Shared With</h2>
+          </div>
+
+          {subscription.isShared ? (
+            <div className="text-center py-8 border-2 border-dashed border-gray-400">
+              <p className="text-gray-600 font-semibold">
+                This subscription is shared with you. Only the owner can manage shared users.
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Add User Input */}
+              <div className="mb-6">
+                <label className="block font-bold mb-3 text-lg">Add People</label>
+                <p className="text-sm text-gray-600 mb-3">
+                  Share this subscription with others. They'll receive renewal reminders.
+                </p>
+                
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        addSharedUser()
+                      }
+                    }}
+                    className="flex-1 px-5 py-3 border-2 border-black font-semibold focus:outline-none focus:border-gray-400 transition-colors"
+                    placeholder="friend@example.com"
+                    disabled={isAddingUser}
+                  />
+                  <button
+                    type="button"
+                    onClick={addSharedUser}
+                    disabled={isAddingUser}
+                    className="px-6 py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: 'var(--nb-accent-2)' }}
+                  >
+                    <Plus size={20} />
+                    {isAddingUser ? 'Adding...' : 'Add'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Shared Users List */}
+              {subscription.sharedWith && subscription.sharedWith.length > 0 ? (
+                <div>
+                  <p className="font-bold mb-3">
+                    {subscription.sharedWith.length} {subscription.sharedWith.length === 1 ? 'Person' : 'People'} Sharing
+                  </p>
+                  <div className="space-y-2">
+                    {subscription.sharedWith.map((email) => (
+                      <div
+                        key={email}
+                        className="flex items-center justify-between p-4 border-2 border-black"
+                        style={{ backgroundColor: 'var(--nb-accent-2)' }}
+                      >
+                        <span className="font-semibold">{email}</span>
+                        <button
+                          onClick={() => removeSharedUser(email)}
+                          className="p-2 hover:bg-black hover:text-white transition-colors border-2 border-black"
+                          title="Remove user"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 border-2 border-dashed border-gray-400">
+                  <p className="text-gray-600 font-semibold">
+                    No one is sharing this subscription yet. Add people above!
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
         {/* Action Buttons */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          {subscription.status === 'active' && (
-            <button
-              onClick={() => handleStatusChange('paused')}
-              className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
-              style={{ backgroundColor: 'var(--nb-warn)' }}
-            >
-              <Pause size={20} /> Pause
-            </button>
-          )}
+        {!subscription.isShared && (
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
+            {subscription.status === 'active' && (
+              <button
+                onClick={() => handleStatusChange('paused')}
+                className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
+                style={{ backgroundColor: 'var(--nb-warn)' }}
+              >
+                <Pause size={20} /> Pause
+              </button>
+            )}
 
-          {subscription.status === 'paused' && (
-            <button
-              onClick={() => handleStatusChange('active')}
-              className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
-              style={{ backgroundColor: 'var(--nb-ok)' }}
-            >
-              <Play size={20} /> Resume
-            </button>
-          )}
+            {subscription.status === 'paused' && (
+              <button
+                onClick={() => handleStatusChange('active')}
+                className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
+                style={{ backgroundColor: 'var(--nb-ok)' }}
+              >
+                <Play size={20} /> Resume
+              </button>
+            )}
 
-          {subscription.status !== 'canceled' && (
+            {subscription.status !== 'canceled' && (
+              <button
+                onClick={() => handleStatusChange('canceled')}
+                className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
+                style={{ backgroundColor: 'var(--nb-error)' }}
+              >
+                <X size={20} /> Cancel
+              </button>
+            )}
+
             <button
-              onClick={() => handleStatusChange('canceled')}
+              onClick={handleDelete}
               className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
               style={{ backgroundColor: 'var(--nb-error)' }}
             >
-              <X size={20} /> Cancel
+              <Trash2 size={20} /> Delete
             </button>
-          )}
+          </div>
+        )}
 
-          <button
-            onClick={handleDelete}
-            className="py-3 border-3 border-black font-bold hover:translate-x-1 hover:translate-y-1 transition-transform flex items-center justify-center gap-2"
-            style={{ backgroundColor: 'var(--nb-error)' }}
-          >
-            <Trash2 size={20} /> Delete
-          </button>
-        </div>
+        {subscription.isShared && (
+          <div className="border-3 border-black p-6 mb-8 text-center" style={{ backgroundColor: 'var(--nb-warn)' }}>
+            <p className="font-bold text-lg">
+              📋 This is a shared subscription. Only the owner can modify or delete it.
+            </p>
+          </div>
+        )}
 
         {/* Created Date */}
         <div

@@ -41,6 +41,17 @@ const subscriptionSchema = new mongoose.Schema({
   notes: {
     type: String
   },
+  sharedWith: [{
+    type: String,
+    trim: true,
+    lowercase: true,
+    validate: {
+      validator: function(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      },
+      message: 'Invalid email address'
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now

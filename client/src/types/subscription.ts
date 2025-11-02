@@ -14,6 +14,8 @@ export interface Subscription {
   notes?: string
   createdAt: string
   userId: string
+  sharedWith?: string[]
+  isShared?: boolean
 }
 
 export interface SubscriptionStats {

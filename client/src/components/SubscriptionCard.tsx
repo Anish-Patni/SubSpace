@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Subscription } from '@/types/subscription'
-import { Calendar, CreditCard } from 'lucide-react'
+import { Calendar, CreditCard, Users } from 'lucide-react'
 
 interface SubscriptionCardProps {
   subscription: Subscription
@@ -21,12 +21,24 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
   return (
     <Link to={`/subscription/${subscription._id}`}>
       <div 
-        className="border-4 border-black p-6 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all cursor-pointer"
+        className="border-4 border-black p-6 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all cursor-pointer relative"
         style={{ backgroundColor: 'var(--nb-card)' }}
       >
+        {/* Shared Badge */}
+        {subscription.isShared && (
+          <div 
+            className="absolute top-3 right-3 px-3 py-1 border-2 border-black font-bold text-xs flex items-center gap-1"
+            style={{ backgroundColor: 'var(--nb-accent-2)' }}
+            title="This subscription is shared with you"
+          >
+            <Users size={12} />
+            SHARED
+          </div>
+        )}
+
         {/* Service Name & Status */}
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-2xl font-black">{subscription.serviceName}</h3>
+          <h3 className="text-2xl font-black pr-20">{subscription.serviceName}</h3>
           <div 
             className="px-3 py-1 border-2 border-black font-bold text-xs"
             style={{ backgroundColor: statusColors[subscription.status] }}
