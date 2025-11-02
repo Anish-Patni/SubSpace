@@ -6,7 +6,6 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { subscriptionService } from '@/services/subscriptionService'
 import { aiService } from '@/services/aiService'
-import { toast } from 'sonner'
 
 export const AddSubscription = () => {
   const navigate = useNavigate()
@@ -43,10 +42,9 @@ export const AddSubscription = () => {
         notes: formData.notes || undefined
       })
       
-      toast.success('Subscription added successfully!')
       navigate('/dashboard')
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to add subscription')
+      console.error('Failed to add subscription:', error)
     } finally {
       setIsSubmitting(false)
     }
@@ -54,7 +52,6 @@ export const AddSubscription = () => {
 
   const handleAiProcess = async () => {
     if (!aiInput.trim()) {
-      toast.error('Please enter a description')
       return
     }
 
@@ -64,11 +61,9 @@ export const AddSubscription = () => {
       const result = await aiService.createSubscription(aiInput)
       console.log('AI create result:', result)
       
-      toast.success('Subscription added successfully!')
       navigate('/dashboard')
     } catch (error: any) {
       console.error('AI create error:', error)
-      toast.error(error.response?.data?.error || 'Failed to process with AI')
     } finally {
       setAiProcessing(false)
     }

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/Navbar'
 import { subscriptionService } from '@/services/subscriptionService'
 import { Subscription } from '@/types/subscription'
-import { ChevronLeft, ChevronRight, DollarSign } from 'lucide-react'
+import { ChevronLeft, ChevronRight, DollarSign, Download } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const CalendarView = () => {
   const navigate = useNavigate()
@@ -78,6 +79,36 @@ export const CalendarView = () => {
 
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
+  const downloadCalendar = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch('http://localhost:5000/api/subscriptions/export/calendar', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to download calendar')
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'subscriptions.ics'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+      
+      toast.success('Calendar file downloaded!')
+    } catch (error) {
+      console.error('Failed to download calendar:', error)
+      toast.error('Failed to download calendar')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)' }}>
@@ -96,12 +127,26 @@ export const CalendarView = () => {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-5xl font-black">Renewal Calendar</h1>
-          <div className="border-4 border-black p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-6 h-6" />
-              <div>
-                <p className="text-sm font-bold">This Month</p>
-                <p className="text-2xl font-black">${monthTotal.toFixed(2)}</p>
+          
+          <div className="flex gap-4 items-center">
+            {/* Export Calendar Button */}
+            <button
+              onClick={downloadCalendar}
+              className="px-6 py-3 border-4 border-black font-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-2"
+              style={{ backgroundColor: 'var(--custom-lavender)' }}
+            >
+              <Download className="w-5 h-5" />
+              Export Calendar
+            </button>
+            
+            {/* Month Total */}
+            <div className="border-4 border-black p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-6 h-6" />
+                <div>
+                  <p className="text-sm font-bold">This Month</p>
+                  <p className="text-2xl font-black">${monthTotal.toFixed(2)}</p>
+                </div>
               </div>
             </div>
           </div>

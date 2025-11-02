@@ -3,6 +3,8 @@ import { body, validationResult } from 'express-validator';
 import { authenticate } from '../middleware/auth.js';
 import { extractSubscriptionData } from '../services/aiService.js';
 import Subscription from '../models/Subscription.js';
+import User from '../models/User.js';
+import emailService from '../services/emailService.js';
 
 const router = express.Router();
 
@@ -107,6 +109,28 @@ router.post('/create',
       console.log('Subscription object before save:', subscription);
       await subscription.save();
       console.log('Subscription saved successfully:', subscription._id);
+      
+      // Send confirmation email with calendar invite
+      console.log('=== ATTEMPTING TO SEND EMAIL ===');
+      try {
+        console.log('Looking up user:', req.userId);
+        const user = await User.findById(req.userId);
+        console.log('User found:', user ? user.email : 'NO USER');
+        
+        if (user) {
+          console.log('Calling emailService.sendSubscriptionAddedEmail...');
+          await emailService.sendSubscriptionAddedEmail(user, subscription);
+          console.log('✅ Confirmation email sent to:', user.email);
+        } else {
+          console.log('⚠️ User not found, cannot send email');
+        }
+      } catch (emailError) {
+        console.error('⚠️ Failed to send email:', emailError.message);
+        console.error('Email error stack:', emailError.stack);
+        // Don't fail the request if email fails
+      }
+      console.log('=== EMAIL PROCESS COMPLETE ===');
+      
       console.log('===============================');
       
       res.status(201).json(subscription);

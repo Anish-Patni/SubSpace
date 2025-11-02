@@ -5,6 +5,7 @@ import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import subscriptionRoutes from './routes/subscriptions.js';
 import aiRoutes from './routes/ai.js';
+import notificationScheduler from './services/notificationScheduler.js';
 
 dotenv.config();
 
@@ -39,4 +40,7 @@ app.get('/health', (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  
+  // Start notification scheduler for email reminders
+  notificationScheduler.start();
 });

@@ -1,7 +1,10 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Subscription from '../models/Subscription.js';
+import User from '../models/User.js';
 import { authenticate } from '../middleware/auth.js';
+import emailService from '../services/emailService.js';
+import ical from 'ical-generator';
 
 const router = express.Router();
 
@@ -65,6 +68,28 @@ router.post('/',
       console.log('Subscription object before save:', subscription);
       await subscription.save();
       console.log('Subscription saved successfully:', subscription._id);
+      
+      // Send confirmation email with calendar invite
+      console.log('=== ATTEMPTING TO SEND EMAIL ===');
+      try {
+        console.log('Looking up user:', req.userId);
+        const user = await User.findById(req.userId);
+        console.log('User found:', user ? user.email : 'NO USER');
+        
+        if (user) {
+          console.log('Calling emailService.sendSubscriptionAddedEmail...');
+          await emailService.sendSubscriptionAddedEmail(user, subscription);
+          console.log('✅ Confirmation email sent to:', user.email);
+        } else {
+          console.log('⚠️ User not found, cannot send email');
+        }
+      } catch (emailError) {
+        console.error('⚠️ Failed to send email:', emailError.message);
+        console.error('Email error stack:', emailError.stack);
+        // Don't fail the request if email fails
+      }
+      console.log('=== EMAIL PROCESS COMPLETE ===');
+      
       console.log('============================');
       
       res.status(201).json(subscription);
@@ -152,6 +177,47 @@ router.get('/stats/summary', async (req, res) => {
       nextRenewal: nextRenewal ? nextRenewal.renewalDate : null
     });
   } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Export all subscriptions as .ics calendar file
+router.get('/export/calendar', async (req, res) => {
+  try {
+    const subscriptions = await Subscription.find({ userId: req.userId });
+
+    const calendar = ical({ name: 'SubSpace Subscriptions' });
+
+    subscriptions.forEach((sub) => {
+      const event = calendar.createEvent({
+        start: new Date(sub.renewalDate),
+        end: new Date(new Date(sub.renewalDate).getTime() + 60 * 60 * 1000),
+        summary: `${sub.serviceName} Renewal - $${sub.price}`,
+        description: `${sub.billingCycle} subscription renewal\nPayment Method: ${sub.paymentMethod}\nCategory: ${sub.category}`,
+        location: 'SubSpace App',
+        url: `${process.env.APP_URL}/dashboard`,
+      });
+
+      // Add recurring rule based on billing cycle
+      if (sub.billingCycle === 'monthly') {
+        event.repeating({ freq: 'MONTHLY' });
+      } else if (sub.billingCycle === 'yearly') {
+        event.repeating({ freq: 'YEARLY' });
+      } else if (sub.billingCycle === 'weekly') {
+        event.repeating({ freq: 'WEEKLY' });
+      } else if (sub.billingCycle === 'quarterly') {
+        event.repeating({ freq: 'MONTHLY', interval: 3 });
+      }
+    });
+
+    res.set({
+      'Content-Type': 'text/calendar; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="subscriptions.ics"',
+    });
+
+    res.send(calendar.toString());
+  } catch (error) {
+    console.error('Calendar export error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
