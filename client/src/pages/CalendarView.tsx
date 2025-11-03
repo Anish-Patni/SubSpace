@@ -124,28 +124,28 @@ export const CalendarView = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-5xl font-black">Renewal Calendar</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black">Renewal Calendar</h1>
           
-          <div className="flex gap-4 items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
             {/* Export Calendar Button */}
             <button
               onClick={downloadCalendar}
-              className="px-6 py-3 border-4 border-black font-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-2"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 border-3 sm:border-4 border-black font-black text-sm sm:text-base shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2"
               style={{ backgroundColor: 'var(--custom-lavender)' }}
             >
-              <Download className="w-5 h-5" />
+              <Download className="w-4 h-4 sm:w-5 sm:h-5" />
               Export Calendar
             </button>
             
             {/* Month Total */}
-            <div className="border-4 border-black p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="border-3 sm:border-4 border-black p-3 sm:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
               <div className="flex items-center gap-2">
-                <DollarSign className="w-6 h-6" />
+                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" />
                 <div>
-                  <p className="text-sm font-bold">This Month</p>
-                  <p className="text-2xl font-black">${monthTotal.toFixed(2)}</p>
+                  <p className="text-xs sm:text-sm font-bold">This Month</p>
+                  <p className="text-xl sm:text-2xl font-black">${monthTotal.toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -153,40 +153,40 @@ export const CalendarView = () => {
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Left: Calendar */}
-          <div className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center justify-between p-6 border-b-4 border-black">
+          <div className="border-3 sm:border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b-3 sm:border-b-4 border-black">
               <button
                 onClick={previousMonth}
-                className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                className="p-2 sm:p-3 border-2 sm:border-3 border-black hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                 style={{ backgroundColor: 'var(--nb-bg)' }}
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
-              <h2 className="text-3xl font-black">{monthName}</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black">{monthName}</h2>
               <button
                 onClick={nextMonth}
-                className="p-3 border-3 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                className="p-2 sm:p-3 border-2 sm:border-3 border-black hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                 style={{ backgroundColor: 'var(--nb-bg)' }}
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Calendar Grid */}
-            <div className="p-6">
+            <div className="p-3 sm:p-4 md:p-6">
               {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-2 mb-4">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-3 sm:mb-4">
                 {days.map(day => (
-                  <div key={day} className="text-center font-black text-sm p-2">
-                    {day}
+                  <div key={day} className="text-center font-black text-[10px] sm:text-xs md:text-sm p-1 sm:p-2">
+                    {day.slice(0, 3)}
                   </div>
                 ))}
               </div>
 
               {/* Calendar Days */}
-              <div className="grid grid-cols-7 gap-2">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2">
                 {/* Empty cells for days before month starts */}
                 {Array.from({ length: firstDay }).map((_, index) => (
                   <div key={`empty-${index}`} className="aspect-square" />
@@ -201,32 +201,32 @@ export const CalendarView = () => {
                   return (
                     <div
                       key={day}
-                      className={`aspect-square border-3 border-black p-1 relative ${isTodayDate ? 'ring-4 ring-offset-2 ring-blue-500' : ''
+                      className={`aspect-square border-2 sm:border-3 border-black p-0.5 sm:p-1 relative ${isTodayDate ? 'ring-2 sm:ring-4 ring-offset-1 sm:ring-offset-2 ring-blue-500' : ''
                         }`}
                       style={{
                         backgroundColor: daySubs.length > 0 ? 'var(--nb-accent)' : 'var(--nb-bg)'
                       }}
                     >
-                      <div className="font-black text-sm mb-1">{day}</div>
+                      <div className="font-black text-[10px] sm:text-xs mb-0.5 sm:mb-1">{day}</div>
                       {daySubs.length > 0 && (
-                        <div className="space-y-1">
+                        <div className="space-y-0.5 sm:space-y-1">
                           {daySubs.slice(0, 1).map(sub => (
                             <div
                               key={sub._id}
                               onClick={() => navigate(`/subscription/${sub._id}`)}
-                              className="text-[10px] font-bold p-0.5 border border-black cursor-pointer hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all truncate"
+                              className="text-[8px] sm:text-[10px] font-bold p-0.5 border border-black cursor-pointer hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all truncate"
                               style={{ backgroundColor: 'var(--nb-card)' }}
                               title={`${sub.serviceName} - $${sub.price}`}
                             >
-                              {sub.serviceName.slice(0, 8)}
+                              {sub.serviceName.slice(0, 6)}
                             </div>
                           ))}
                           {daySubs.length > 1 && (
-                            <div className="text-[10px] font-bold text-center">
+                            <div className="text-[8px] sm:text-[10px] font-bold text-center">
                               +{daySubs.length - 1}
                             </div>
                           )}
-                          <div className="text-[10px] font-black text-center">
+                          <div className="text-[8px] sm:text-[10px] font-black text-center">
                             ${dayTotal.toFixed(0)}
                           </div>
                         </div>
@@ -239,9 +239,9 @@ export const CalendarView = () => {
           </div>
 
           {/* Right: Upcoming Renewals List */}
-          <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <h2 className="text-2xl font-black mb-6">Upcoming Renewals</h2>
-            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+          <div className="border-3 sm:border-4 border-black p-4 sm:p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6">Upcoming Renewals</h2>
+            <div className="space-y-3 max-h-[400px] sm:max-h-[500px] md:max-h-[600px] overflow-y-auto pr-1 sm:pr-2">
               {subscriptions
                 .filter(sub => {
                   const renewalDate = new Date(sub.renewalDate)
@@ -257,25 +257,25 @@ export const CalendarView = () => {
                     <div
                       key={sub._id}
                       onClick={() => navigate(`/subscription/${sub._id}`)}
-                      className="flex items-center justify-between border-3 border-black p-4 cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                      className="flex items-center justify-between border-2 sm:border-3 border-black p-3 sm:p-4 cursor-pointer hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                       style={{
                         backgroundColor: isPast ? 'var(--nb-bg)' : 'var(--nb-card)',
                         opacity: isPast ? 0.6 : 1
                       }}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="text-center border-2 border-black p-2 min-w-[60px]" style={{ backgroundColor: 'var(--nb-accent)' }}>
-                          <div className="text-2xl font-black">{renewalDate.getDate()}</div>
-                          <div className="text-xs font-bold">{renewalDate.toLocaleDateString('en-US', { month: 'short' })}</div>
+                      <div className="flex items-center gap-2 sm:gap-4">
+                        <div className="text-center border-2 border-black p-1.5 sm:p-2 min-w-[45px] sm:min-w-[60px]" style={{ backgroundColor: 'var(--nb-accent)' }}>
+                          <div className="text-lg sm:text-2xl font-black">{renewalDate.getDate()}</div>
+                          <div className="text-[10px] sm:text-xs font-bold">{renewalDate.toLocaleDateString('en-US', { month: 'short' })}</div>
                         </div>
                         <div>
-                          <p className="font-black text-lg">{sub.serviceName}</p>
-                          <p className="text-sm capitalize">{sub.billingCycle} • {sub.category || 'Uncategorized'}</p>
+                          <p className="font-black text-sm sm:text-base md:text-lg">{sub.serviceName}</p>
+                          <p className="text-xs sm:text-sm capitalize">{sub.billingCycle} • {sub.category || 'Uncategorized'}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-black">${sub.price.toFixed(2)}</p>
-                        {isPast && <p className="text-xs font-bold text-red-600">Past Due</p>}
+                        <p className="text-lg sm:text-xl md:text-2xl font-black">${sub.price.toFixed(2)}</p>
+                        {isPast && <p className="text-[10px] sm:text-xs font-bold text-red-600">Past Due</p>}
                       </div>
                     </div>
                   )
@@ -285,7 +285,7 @@ export const CalendarView = () => {
                 return renewalDate.getMonth() === currentDate.getMonth() &&
                   renewalDate.getFullYear() === currentDate.getFullYear()
               }).length === 0 && (
-                  <p className="text-center py-8 text-gray-500">No renewals this month</p>
+                  <p className="text-center py-8 text-sm sm:text-base text-gray-500">No renewals this month</p>
                 )}
             </div>
           </div>

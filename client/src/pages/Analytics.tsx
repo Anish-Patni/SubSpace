@@ -91,53 +91,53 @@ export const Analytics = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--nb-bg)', color: 'var(--nb-ink)' }}>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <h1 className="text-5xl font-black mb-8">Analytics Dashboard</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 sm:mb-8">Analytics Dashboard</h1>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center gap-3 mb-2">
-              <DollarSign className="w-8 h-8" />
-              <h3 className="text-lg font-bold">Monthly Spend</h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+          <div className="border-3 sm:border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <DollarSign className="w-6 h-6 sm:w-8 sm:h-8" />
+              <h3 className="text-sm sm:text-base md:text-lg font-bold">Monthly Spend</h3>
             </div>
-            <p className="text-4xl font-black">${totalMonthly.toFixed(2)}</p>
+            <p className="text-2xl sm:text-3xl md:text-4xl font-black">${totalMonthly.toFixed(2)}</p>
           </div>
 
-          <div className="border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center gap-3 mb-2">
-              <TrendingUp className="w-8 h-8" />
-              <h3 className="text-lg font-bold">Yearly Spend</h3>
+          <div className="border-3 sm:border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8" />
+              <h3 className="text-sm sm:text-base md:text-lg font-bold">Yearly Spend</h3>
             </div>
-            <p className="text-4xl font-black">${totalYearly.toFixed(2)}</p>
+            <p className="text-2xl sm:text-3xl md:text-4xl font-black">${totalYearly.toFixed(2)}</p>
           </div>
 
-          <div className="border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center gap-3 mb-2">
-              <Package className="w-8 h-8" />
-              <h3 className="text-lg font-bold">Active Subs</h3>
+          <div className="border-3 sm:border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <Package className="w-6 h-6 sm:w-8 sm:h-8" />
+              <h3 className="text-sm sm:text-base md:text-lg font-bold">Active Subs</h3>
             </div>
-            <p className="text-4xl font-black">{activeSubscriptions.length}</p>
+            <p className="text-2xl sm:text-3xl md:text-4xl font-black">{activeSubscriptions.length}</p>
           </div>
 
-          <div className="border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <div className="flex items-center gap-3 mb-2">
-              <Calendar className="w-8 h-8" />
-              <h3 className="text-lg font-bold">Avg per Sub</h3>
+          <div className="border-3 sm:border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8" />
+              <h3 className="text-sm sm:text-base md:text-lg font-bold">Avg per Sub</h3>
             </div>
-            <p className="text-4xl font-black">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-black">
               ${activeSubscriptions.length > 0 ? (totalMonthly / activeSubscriptions.length).toFixed(2) : '0.00'}
             </p>
           </div>
         </div>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Category Breakdown */}
-          <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <h2 className="text-2xl font-black mb-6">Spending by Category</h2>
+          <div className="border-3 sm:border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6">Spending by Category</h2>
             {categoryChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                 <PieChart>
                   <Pie
                     data={categoryChartData}
@@ -145,9 +145,10 @@ export const Analytics = () => {
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`}
-                    outerRadius={100}
+                    outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
+                    className="sm:outerRadius-[100px]"
                   >
                     {categoryChartData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="#000" strokeWidth={2} />
@@ -162,14 +163,14 @@ export const Analytics = () => {
           </div>
 
           {/* Billing Cycle Breakdown */}
-          <div className="border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-            <h2 className="text-2xl font-black mb-6">Billing Cycles</h2>
+          <div className="border-3 sm:border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+            <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6">Billing Cycles</h2>
             {billingCycleChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                 <BarChart data={billingCycleChartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#000" />
-                  <XAxis dataKey="name" stroke="#000" />
-                  <YAxis stroke="#000" />
+                  <XAxis dataKey="name" stroke="#000" className="text-xs sm:text-sm" />
+                  <YAxis stroke="#000" className="text-xs sm:text-sm" />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="count" fill="#4ECDC4" stroke="#000" strokeWidth={2} name="Count" />
@@ -182,22 +183,22 @@ export const Analytics = () => {
         </div> 
 
         {/* Top Subscriptions */}
-        <div className="mt-8 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
-          <h2 className="text-2xl font-black mb-6">Most Expensive Subscriptions</h2>
-          <div className="space-y-4">
+        <div className="mt-6 sm:mt-8 border-3 sm:border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" style={{ backgroundColor: 'var(--nb-card)' }}>
+          <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6">Most Expensive Subscriptions</h2>
+          <div className="space-y-3 sm:space-y-4">
             {activeSubscriptions
               .sort((a, b) => b.price - a.price)
               .slice(0, 5)
               .map((sub, index) => (
-                <div key={sub._id} className="flex items-center justify-between border-2 border-black p-4">
-                  <div className="flex items-center gap-4">
-                    <span className="text-2xl font-black">{index + 1}</span>
+                <div key={sub._id} className="flex items-center justify-between border-2 border-black p-3 sm:p-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <span className="text-xl sm:text-2xl font-black">{index + 1}</span>
                     <div>
-                      <p className="font-bold text-lg">{sub.serviceName}</p>
-                      <p className="text-sm capitalize">{sub.billingCycle}</p>
+                      <p className="font-bold text-base sm:text-lg">{sub.serviceName}</p>
+                      <p className="text-xs sm:text-sm capitalize">{sub.billingCycle}</p>
                     </div>
                   </div>
-                  <p className="text-2xl font-black">${sub.price.toFixed(2)}</p>
+                  <p className="text-xl sm:text-2xl font-black">${sub.price.toFixed(2)}</p>
                 </div>
               ))}
           </div>
