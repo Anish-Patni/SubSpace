@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Test - SubSpace</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border: 4px solid #1A1A1A;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #1A1A1A;
+            border-bottom: 3px solid #FF6F61;
+            padding-bottom: 10px;
+        }
+        .config-section {
+            background-color: #F7F5F2;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #1A1A1A;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1A1A1A;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #1A1A1A;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        button {
+            background-color: #FF6F61;
+            color: white;
+            padding: 12px 30px;
+            border: 3px solid #1A1A1A;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #e55a4a;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #1A1A1A;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background-color: #90EE90;
+            display: block;
+        }
+        .status.error {
+            background-color: #FF6B6B;
+            display: block;
+        }
+        .status.info {
+            background-color: #F4D738;
+            display: block;
+        }
+        .instructions {
+            background-color: #C4A1FF;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #1A1A1A;
+            border-radius: 5px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions code {
+            background-color: #1A1A1A;
+            color: #90EE90;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 EmailJS Test - SubSpace</h1>
+        
+        <div class="instructions">
+            <h3>🔧 Setup Instructions:</h3>
+            <ol>
+                <li>Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a></li>
+                <li>Add an email service (Gmail, Outlook, etc.)</li>
+                <li>Create an email template with these variables:
+                    <ul>
+                        <li><code>{{to_email}}</code></li>
+                        <li><code>{{to_name}}</code></li>
+                        <li><code>{{service_name}}</code></li>
+                        <li><code>{{amount}}</code></li>
+                        <li><code>{{renewal_date}}</code></li>
+                        <li><code>{{days_until_renewal}}</code></li>
+                        <li><code>{{message_type}}</code></li>
+                    </ul>
+                </li>
+                <li>Get your Public Key, Service ID, and Template ID</li>
+                <li>Fill them in below and test!</li>
+            </ol>
+        </div>
+
+        <div class="config-section">
+            <h3>EmailJS Configuration</h3>
+            <div class="input-group">
+                <label for="publicKey">Public Key:</label>
+                <input type="text" id="publicKey" placeholder="Your EmailJS Public Key">
+            </div>
+            <div class="input-group">
+                <label for="serviceId">Service ID:</label>
+                <input type="text" id="serviceId" placeholder="Your EmailJS Service ID">
+            </div>
+            <div class="input-group">
+                <label for="templateId">Template ID:</label>
+                <input type="text" id="templateId" placeholder="Your EmailJS Template ID">
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>Test Email Data</h3>
+            <div class="input-group">
+                <label for="toEmail">Recipient Email:</label>
+                <input type="email" id="toEmail" placeholder="test@example.com" value="amrit2005@gmail.com">
+            </div>
+            <div class="input-group">
+                <label for="toName">Recipient Name:</label>
+                <input type="text" id="toName" placeholder="John Doe" value="Test User">
+            </div>
+            <div class="input-group">
+                <label for="serviceName">Subscription Service:</label>
+                <input type="text" id="serviceName" placeholder="Netflix" value="Netflix">
+            </div>
+            <div class="input-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" placeholder="15.99" value="15.99">
+            </div>
+            <div class="input-group">
+                <label for="renewalDate">Renewal Date:</label>
+                <input type="date" id="renewalDate" value="2025-11-10">
+            </div>
+            <div class="input-group">
+                <label for="emailType">Email Type:</label>
+                <select id="emailType">
+                    <option value="subscription_added">Subscription Added</option>
+                    <option value="renewal_reminder">Renewal Reminder (1 day)</option>
+                    <option value="renewal_reminder_3">Renewal Reminder (3 days)</option>
+                    <option value="renewal_reminder_7">Renewal Reminder (7 days)</option>
+                    <option value="subscription_cancelled">Subscription Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="sendTestEmail()" id="sendBtn">
+            📨 Send Test Email
+        </button>
+        <button onclick="saveConfig()">
+            💾 Save Configuration
+        </button>
+        <button onclick="loadConfig()">
+            📂 Load Configuration
+        </button>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script type="text/javascript">
+        // Load saved configuration on page load
+        window.onload = function() {
+            loadConfig();
+        };
+
+        function saveConfig() {
+            const config = {
+                publicKey: document.getElementById('publicKey').value,
+                serviceId: document.getElementById('serviceId').value,
+                templateId: document.getElementById('templateId').value
+            };
+            localStorage.setItem('emailjs_config', JSON.stringify(config));
+            showStatus('Configuration saved!', 'success');
+        }
+
+        function loadConfig() {
+            const saved = localStorage.getItem('emailjs_config');
+            if (saved) {
+                const config = JSON.parse(saved);
+                document.getElementById('publicKey').value = config.publicKey || '';
+                document.getElementById('serviceId').value = config.serviceId || '';
+                document.getElementById('templateId').value = config.templateId || '';
+                showStatus('Configuration loaded from storage', 'info');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+            
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        async function sendTestEmail() {
+            const publicKey = document.getElementById('publicKey').value;
+            const serviceId = document.getElementById('serviceId').value;
+            const templateId = document.getElementById('templateId').value;
+            const toEmail = document.getElementById('toEmail').value;
+            const toName = document.getElementById('toName').value;
+            const serviceName = document.getElementById('serviceName').value;
+            const amount = document.getElementById('amount').value;
+            const renewalDate = document.getElementById('renewalDate').value;
+            const emailType = document.getElementById('emailType').value;
+
+            // Validation
+            if (!publicKey || !serviceId || !templateId) {
+                showStatus('❌ Please fill in all EmailJS configuration fields!', 'error');
+                return;
+            }
+
+            if (!toEmail || !toName || !serviceName || !amount || !renewalDate) {
+                showStatus('❌ Please fill in all test email data fields!', 'error');
+                return;
+            }
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳ Sending...';
+            showStatus('🔄 Initializing EmailJS...', 'info');
+
+            try {
+                // Initialize EmailJS
+                emailjs.init(publicKey);
+                
+                // Determine days until renewal based on email type
+                let daysUntilRenewal = 0;
+                let messageType = emailType;
+                
+                if (emailType === 'renewal_reminder') {
+                    daysUntilRenewal = 1;
+                    messageType = 'renewal_reminder';
+                } else if (emailType === 'renewal_reminder_3') {
+                    daysUntilRenewal = 3;
+                    messageType = 'renewal_reminder';
+                } else if (emailType === 'renewal_reminder_7') {
+                    daysUntilRenewal = 7;
+                    messageType = 'renewal_reminder';
+                }
+
+                // Prepare template parameters
+                const templateParams = {
+                    to_email: toEmail,
+                    to_name: toName,
+                    service_name: serviceName,
+                    amount: amount,
+                    renewal_date: new Date(renewalDate).toLocaleDateString(),
+                    billing_cycle: 'monthly',
+                    payment_method: 'Credit Card',
+                    days_until_renewal: daysUntilRenewal,
+                    message_type: messageType
+                };
+
+                console.log('📤 Sending email with params:', templateParams);
+                showStatus('📤 Sending email via EmailJS...', 'info');
+
+                // Send email
+                const response = await emailjs.send(serviceId, templateId, templateParams);
+                
+                console.log('✅ Success:', response);
+                showStatus('✅ Email sent successfully! Check your inbox.', 'success');
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showStatus('❌ Failed to send email: ' + error.text || error.message, 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = '📨 Send Test Email';
+            }
+        }
+    </script>
+</body>
+</html>

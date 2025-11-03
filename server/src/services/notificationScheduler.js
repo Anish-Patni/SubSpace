@@ -5,19 +5,15 @@ import emailService from './emailService.js';
 
 class NotificationScheduler {
   start() {
-    // Run every day at 9 AM
-    cron.schedule('0 9 * * *', async () => {
-      console.log('Running daily notification check...');
-      await this.sendDailyReminders();
-    });
-
-    // Run every day at 8 AM for daily digest
-    cron.schedule('0 8 * * *', async () => {
-      console.log('Sending daily digest...');
-      await this.sendDailyDigests();
-    });
-
-    console.log('✅ Notification scheduler started');
+    console.log('⚠️ Notification scheduler disabled - email notifications are now handled client-side');
+    
+    // Scheduler is disabled since email functionality moved to client
+    // All email reminders are now sent from the client when user loads the app
+    
+    // Optionally, you can keep this for logging or future server-side notifications
+    // cron.schedule('0 9 * * *', async () => {
+    //   console.log('Daily notification check (disabled)');
+    // });
   }
 
   async sendDailyReminders() {
