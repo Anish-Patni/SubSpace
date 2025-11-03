@@ -54,19 +54,49 @@ export const subscriptionService = {
   },
 
   async update(id: string, data: UpdateSubscriptionData): Promise<Subscription> {
+    // Get the old subscription first to compare sharedWith changes
+    let oldSharedWith: string[] = [];
+    if (data.sharedWith) {
+      try {
+        const oldSubscription = await this.getById(id);
+        oldSharedWith = oldSubscription.sharedWith || [];
+      } catch (error) {
+        console.error('Failed to get old subscription:', error);
+      }
+    }
+
     const response = await axiosInstance.put(`/subscriptions/${id}`, data);
     const subscription = response.data;
     
-    // Send email notification if subscription was cancelled
-    if (data.status === 'canceled') {
-      try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.email) {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (!user.email) return subscription;
+
+      // Send email notification if subscription was cancelled
+      if (data.status === 'canceled') {
+        try {
           await emailService.sendSubscriptionCancelledEmail(user, subscription);
+        } catch (error) {
+          console.error('Failed to send cancellation email:', error);
         }
-      } catch (error) {
-        console.error('Failed to send email notification:', error);
       }
+
+      // Send notifications for newly added shared users
+      if (data.sharedWith) {
+        const newSharedWith = data.sharedWith;
+        const addedEmails = newSharedWith.filter(email => !oldSharedWith.includes(email));
+
+        for (const email of addedEmails) {
+          try {
+            await emailService.sendSharedSubscriptionEmail(email, user, subscription);
+            console.log(`✅ Sent shared subscription email to: ${email}`);
+          } catch (error) {
+            console.error(`Failed to send shared subscription email to ${email}:`, error);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to process email notifications:', error);
     }
     
     return subscription;

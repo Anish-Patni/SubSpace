@@ -17,6 +17,7 @@ interface Subscription {
   renewalDate: string;
   paymentMethod?: string;
   status?: string;
+  sharedWith?: string[];
 }
 
 interface User {
@@ -138,8 +139,41 @@ class EmailService {
   }
 
   /**
+   * Send a shared subscription notification email
+   */
+  async sendSharedSubscriptionEmail(toEmail: string, owner: User, subscription: Subscription): Promise<void> {
+    this.checkConfig();
+    if (!this.isConfigured()) return;
+
+    try {
+      const templateParams = {
+        to_email: toEmail,
+        to_name: toEmail.split('@')[0], // Use first part of email as name
+        owner_name: owner.name,
+        subject: `🤝 Subscription Shared: ${subscription.serviceName}`,
+        service_name: subscription.serviceName,
+        amount: subscription.price,
+        billing_cycle: subscription.billingCycle,
+        renewal_date: new Date(subscription.renewalDate).toLocaleDateString(),
+        payment_method: subscription.paymentMethod || 'N/A',
+        message_type: 'subscription_shared'
+      };
+
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID!,
+        EMAILJS_TEMPLATE_ID!,
+        templateParams
+      );
+
+      console.log('✅ Shared subscription email sent successfully:', response);
+    } catch (error) {
+      console.error('❌ Failed to send shared subscription email:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Check for upcoming renewals and send reminders
-   * This should be called periodically (e.g., on app load or user action)
    */
   async checkAndSendReminders(subscriptions: Subscription[], user: User): Promise<void> {
     this.checkConfig();

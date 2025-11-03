@@ -77,8 +77,21 @@ export const AddSubscription = () => {
     setAiProcessing(true)
     try {
       // Use the direct AI create endpoint - one step process!
-      const result = await aiService.createSubscription(aiInput)
-      console.log('AI create result:', result)
+      const subscription = await aiService.createSubscription(aiInput)
+      console.log('AI create result:', subscription)
+      
+      // Send email notification from client-side
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        if (user.email) {
+          const { emailService } = await import('@/services/emailService')
+          await emailService.sendSubscriptionAddedEmail(user, subscription)
+          console.log('✅ Email notification sent for AI-created subscription')
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError)
+        // Don't fail the subscription creation if email fails
+      }
       
       navigate('/dashboard')
     } catch (error: any) {
