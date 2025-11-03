@@ -188,7 +188,7 @@ export const AddSubscription = () => {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block font-bold mb-3 text-lg">Payment Method (Optional)</label>
+                    <label className="block font-bold mb-3 text-lg">Payment Method (Optional todo)</label>
                     <input
                       type="text"
                       value={formData.paymentMethod}
